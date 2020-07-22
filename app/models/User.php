@@ -1,5 +1,7 @@
 <?php
 
+use app\DB;
+
 class User
 {
 	private $id;
@@ -11,8 +13,11 @@ class User
 	private $photo;
 	private $created_at;
 
+	//getUser
 
+	//createUser
 
+	//deleteUser
 
 
 }
