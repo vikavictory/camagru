@@ -1,0 +1,40 @@
+CREATE SCHEMA IF NOT EXISTS `camagru`;
+
+USE camagru;
+
+CREATE TABLE IF NOT EXISTS users (
+    id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    login		CHAR(15) NOT NULL UNIQUE,
+    email		CHAR(40) NOT NULL UNIQUE,
+    `name`		VARCHAR(30) NOT NULL,
+    surname		VARCHAR(30) NOT NULL,
+    password	VARCHAR(50) NOT NULL,
+    token       VARCHAR(255),
+    photo       LONGBLOB,
+    created_at	TIMESTAMP);
+
+CREATE TABLE IF NOT EXISTS photos (
+	id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	user_id		INT,
+	photo       LONGBLOB NOT NULL,
+	description	TINYTEXT,
+	created_at	TIMESTAMP);
+
+CREATE TABLE IF NOT EXISTS comments (
+	id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	photo_id	INT ,
+	user_id		INT ,
+	created_at	TIMESTAMP,
+	FOREIGN KEY (user_id)  REFERENCES users (id),
+	FOREIGN KEY (photo_id)  REFERENCES photos (id));
+
+CREATE TABLE IF NOT EXISTS likes (
+	id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	photo_id	INT,
+	user_id		INT,
+	created_at	TIMESTAMP,
+    FOREIGN KEY (user_id)  REFERENCES users (id),
+	FOREIGN KEY (photo_id)  REFERENCES photos (id));
+
+INSERT INTO users(login, email, `name`, surname, password, token, created_at)
+    VALUES ('admin', 'admin@admin.ru', 'vika', 'titova', '123', '-', '2020-07-22T15:00:00.000Z');
