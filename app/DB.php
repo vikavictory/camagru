@@ -13,7 +13,7 @@ class DB
 	{
 		if (self::$instance === null) {
 			try {
-				require('../config/database.php');cd
+				require('../config/database.php');
 				self::$db_connection = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
 				self::$db_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			} catch (PDOException $e) {
