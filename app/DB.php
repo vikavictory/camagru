@@ -6,21 +6,26 @@ use PDOException;
 
 class DB
 {
-	protected static $instance = null;
-	public static $db_connection;
+    protected static $instance = null;
+    public static $db_connection;
 
-	function __construct()
+    function __construct()
+    {
+        if (self::$instance === null) {
+            try {
+                require('config/database.php');
+                self::$db_connection = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
+                self::$db_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                echo("ERROR: " . $e->getMessage());
+            }
+        }
+        return self::$instance;
+    }
+
+    public function getConnection()
 	{
-		if (self::$instance === null) {
-			try {
-				require('../config/database.php');
-				self::$db_connection = new PDO($DB_DSN, $DB_USER, $DB_PASSWORD);
-				self::$db_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			} catch (PDOException $e) {
-				echo("ERROR: " . $e->getMessage());
-			}
-		}
-		return self::$instance;
+		return self::$db_connection;
 	}
 
 }

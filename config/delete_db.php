@@ -1,6 +1,6 @@
 <?php
 
-//use app\DB;
+use app\DB;
 require_once '../app/DB.php';
 
 $db = new DB();
