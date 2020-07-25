@@ -36,5 +36,3 @@ CREATE TABLE IF NOT EXISTS likes (
     FOREIGN KEY (user_id)  REFERENCES users (id),
 	FOREIGN KEY (photo_id)  REFERENCES photos (id));
 
-INSERT INTO users(login, email, `name`, surname, password, token, created_at)
-    VALUES ('admin', 'admin@admin.ru', 'vika', 'titova', '123', '-', '2020-07-22T15:00:00.00');
