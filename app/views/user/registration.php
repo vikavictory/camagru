@@ -6,17 +6,12 @@
 	<link rel="shortcut icon" type="image/png" href="favicon.ico"/> -->
 	<!-- Add Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="/public/js/register.js"></script>
 </head>
 <h1 class="display-4">Create account</h1>
-<?php
-if (!empty($_GET['error']))
-{
-	echo "<h3 class=\"error\">Error: ".$_GET['error']."</h3>";
-	$_GET['error'] = "";
-}
-?>
+
 <div class="registration-form">
-	<form name="registration" method="post" action="#" onsubmit="return validate_form ( );">
+	<form name="registration" method="post" action="#" onsubmit="return validate_form( );">
 		Login:<br>
 		<svg class="bi bi-person-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 			<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
@@ -49,7 +44,7 @@ if (!empty($_GET['error']))
 		</svg>
 		<input type="password" name="password2"  required><br>
 		<br><input class="btn btn-primary" type="submit" name="submit" value="SignUp"><br>
-		<br><h6>Already have an account? <a href="../login/login.php">Sign In</a></h6>
+		<br><h6>Already have an account? <a href="/login">Sign In</a></h6>
 	</form>
 </div>
 </html>

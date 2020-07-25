@@ -8,7 +8,8 @@
 <h1 class="display-4"> Main </h1>
 
 <div>
-	<a href="/user/registration">Registration</a>
+	<a href="/registration">Registration</a>
+    <a href="/login">Login</a>
 </div>
 <?php
 

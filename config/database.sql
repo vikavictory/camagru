@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
     email		CHAR(40) NOT NULL UNIQUE,
     `name`		VARCHAR(30) NOT NULL,
     surname		VARCHAR(30) NOT NULL,
-    password	VARCHAR(50) NOT NULL,
+    password	VARCHAR(255) NOT NULL,
     token       VARCHAR(255),
     photo       LONGBLOB,
     created_at	TIMESTAMP);
@@ -37,4 +37,4 @@ CREATE TABLE IF NOT EXISTS likes (
 	FOREIGN KEY (photo_id)  REFERENCES photos (id));
 
 INSERT INTO users(login, email, `name`, surname, password, token, created_at)
-    VALUES ('admin', 'admin@admin.ru', 'vika', 'titova', '123', '-', '2020-07-22T15:00:00.000Z');
+    VALUES ('admin', 'admin@admin.ru', 'vika', 'titova', '123', '-', '2020-07-22T15:00:00.00');

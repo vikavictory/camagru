@@ -1,5 +1,5 @@
 <?php
-use app\DB;
+use app\Model;
 use app\Router;
 
 define('ROOT', dirname(__FILE__));
@@ -15,5 +15,4 @@ session_start();
 
 $router = new Router();
 $router->start();
-print_r($router->getPath($router->getUri()));
 
