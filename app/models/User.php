@@ -8,6 +8,11 @@ use PDOException;
 
 class User extends Model
 {
+//	private function validateUserCreation()
+//	{
+//		if (isset($_POST['submit'] && isset($_POST['login']))
+//
+//	}
 
 	public function createUser()
 	{
@@ -95,12 +100,20 @@ class User extends Model
 	{
 		//обработка ошибок
 		//что нельзя посмотреть неактивированного пользователя
-		$link = self::getDB();
-		$sql = "SELECT id, login, name, surname, email FROM users WHERE login=:login";
-		$sth = $link->prepare($sql);
-		$sth->bindParam(':login', $user);
-		$sth->execute();
-		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		try {
+			$link = self::getDB();
+			$sql = "SELECT id, login, name, surname, email, activated FROM users WHERE login=:login";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':login', $user);
+			$sth->execute();
+			$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		} catch( PDOException $e) {
+			$error = $e->getMessage();
+		} catch( Exception $e) {
+			$error = $e->getMessage();
+		}
+		if ($error)
+			return false;
 		return $result;
 	}
 

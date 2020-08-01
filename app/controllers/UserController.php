@@ -38,9 +38,7 @@ class UserController extends Model
 			if ($result === true)
 				header('Location: /user/' . $_SESSION['user']);
 			else
-			{
 				$message = $result;
-			}
 			$_SESSION['message'] = $message;;
 		}
 		$pathView = $this->DIR_PATH . 'login.php';
@@ -49,10 +47,14 @@ class UserController extends Model
 
 	public function user($user)
 	{
-		$result = User::getUser($user);
-		$_SESSION['page'] = $result;
-		$pathView = $this->DIR_PATH . 'useraccount.php';
-		require_once $pathView;
+		$user = User::getUser($user);
+		if ($user)
+		{
+			$pathView = $this->DIR_PATH . 'useraccount.php';
+			require_once $pathView;
+		}
+		else
+			self::ErrorPage404();
 	}
 
 	public function logout()
@@ -76,6 +78,14 @@ class UserController extends Model
 			else
 				echo "error";
 		}
+	}
+
+	private function ErrorPage404()
+	{
+		$host = 'http://'.$_SERVER['HTTP_HOST'].'/';
+		header('HTTP/1.1 404 Not Found');
+		header("Status: 404 Not Found");
+		header('Location:'.$host.'404');
 	}
 
 }

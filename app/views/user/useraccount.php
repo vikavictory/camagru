@@ -11,10 +11,15 @@
 <body>
 	<h1 class="display-4">Account</h1>
 	<p> Online <?php echo($_SESSION['user']);?> </p>
-    <p> This page of <?php echo $_SESSION['page']['login'] ?></p>
-    <p> Name: <?php echo $_SESSION['page']['name'] ?></p>
-    <p> Surname: <?php echo $_SESSION['page']['surname'] ?></p>
-    <p> Email: <?php echo $_SESSION['page']['email'] ?></p>
+    <?php if ($user['activated'] === "1")
+    {
+        echo "<p> This page of " . $user['login'] . "</p>";
+        echo "<p> Name " . $user['name'] . "</p>";
+        echo "<p> Surame " . $user['surname'] . "</p>";
+        echo "<p> Email: " . $user['email'] . "</p>";
+    }
+	else
+	    echo "<p> Доступ запрещен, пользователь не активирован </p>"; ?>
 	<a href="/logout">Logout</a>
 </body>
 </html>
