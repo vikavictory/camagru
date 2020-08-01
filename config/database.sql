@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     surname		VARCHAR(30) NOT NULL,
     password	VARCHAR(255) NOT NULL,
     token       VARCHAR(255),
+    activated   BOOLEAN DEFAULT '0',
     photo       LONGBLOB,
     created_at	TIMESTAMP);
 

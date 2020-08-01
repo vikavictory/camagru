@@ -3,61 +3,105 @@
 namespace app\models;
 
 use app\Model;
+use Exception;
+use PDOException;
 
 class User extends Model
 {
-	private $link;
-
-	private function validateUser()
-	{
-		//что такой пользователь уже существует
-		//что такой логин уже существует
-	}
 
 	public function createUser()
 	{
-		$link = self::getDB();
-
-
-		//вставить валидацию
-
+		$link = self::getDB(); // обработка если нет подключения к БД
 		$token = md5($_POST['email'] . "918273645");
 		$password = hash('whirlpool', $_POST['password']);
 		$created_at = $today = date("Y-m-d H:i:s");
-		$sql = "INSERT INTO users (login, name, surname, password, email, token, created_at)
+		try {
+			$sql = "INSERT INTO users (login, name, surname, password, email, token, created_at)
 			VALUES (:login, :name, :surname, :password, :email, :token, :created_at)";
-		$sth = $link->prepare($sql);
-		$sth->bindParam(':login', $_POST['login']);
-		$sth->bindParam(':name', $_POST['name']);
-		$sth->bindParam(':surname', $_POST['surname']);
-		$sth->bindParam(':password', $password);
-		$sth->bindParam(':email', $_POST['email']);
-		$sth->bindParam(':token', $token);
-		$sth->bindParam(':created_at', $created_at);
-		$sth->execute();
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':login', $_POST['login']);
+			$sth->bindParam(':name', $_POST['name']);
+			$sth->bindParam(':surname', $_POST['surname']);
+			$sth->bindParam(':password', $password);
+			$sth->bindParam(':email', $_POST['email']);
+			$sth->bindParam(':token', $token);
+			$sth->bindParam(':created_at', $created_at);
+			$sth->execute();
+		} catch( PDOException $e) {
+			return $e->getMessage();
+		} catch( Exception $e) {
+			return $e->getMessage();
+		}
+		return true;
 	}
 
 	public function login()
 	{
+		//обработка ошибок: нет пользователя, неверный пароль, неактивирован
 		$link = self::getDB();
+		try {
+			$sql = "SELECT password, activated FROM users WHERE login=:login";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':login', $_POST['login']);
+			$sth->execute();
+			$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		} catch( PDOException $e) {
+			return $e->getMessage();
+		} catch( Exception $e) {
+			return $e->getMessage();
+		}
+		if (!$result)
+			return "нет такого пользователя";
 
-		echo "here";
-		$sql = "SELECT password FROM users WHERE login=:login";
+		if (hash('whirlpool', $_POST['password']) === $result['password'])
+		{
+			if ($result['activated'] === '1')
+			{
+				$_SESSION['user'] = $_POST['login'];
+				return true;
+			}
+			else
+				return "isn't activated";
+		}
+		else
+			return "wrong password";
+	}
+
+	public function activateAccount($id, $token)
+	{
+		//обработка ошибок
+		//добавить, что уже активирован
+		$link = self::getDB();
+		$sql = "SELECT token FROM users WHERE id=:id";
 		$sth = $link->prepare($sql);
-		$sth->bindParam(':login', $_POST['login']);
+		$sth->bindParam(':id', $id);
 		$sth->execute();
 		$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		print_r($result);
-		if (hash('whirlpool', $_POST['password']) === $result['password'])
-			echo "OK";
+		if ($result['token'] === $token)
+		{
+			$sql = "UPDATE users SET activated = '1' WHERE id=:id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':id', $id);
+			$sth->execute();
+			return true;
+		}
 		else
-			echo "KO";
-		return $result;
-
+			return false;
 	}
 
 	//deleteUser
 
-	//getUser
+	public function getUser($user)
+	{
+		//обработка ошибок
+		//что нельзя посмотреть неактивированного пользователя
+		$link = self::getDB();
+		$sql = "SELECT id, login, name, surname, email FROM users WHERE login=:login";
+		$sth = $link->prepare($sql);
+		$sth->bindParam(':login', $user);
+		$sth->execute();
+		$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		return $result;
+	}
 
 }

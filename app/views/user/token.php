@@ -9,12 +9,8 @@
 	<script src="/public/js/register.js"></script>
 </head>
 <body>
-	<h1 class="display-4">Account</h1>
-	<p> Online <?php echo($_SESSION['user']);?> </p>
-    <p> This page of <?php echo $_SESSION['page']['login'] ?></p>
-    <p> Name: <?php echo $_SESSION['page']['name'] ?></p>
-    <p> Surname: <?php echo $_SESSION['page']['surname'] ?></p>
-    <p> Email: <?php echo $_SESSION['page']['email'] ?></p>
-	<a href="/logout">Logout</a>
+<h1 class="display-4">Token</h1>
+<p> Activated </p>
+<a href="/login">Login</a>
 </body>
 </html>

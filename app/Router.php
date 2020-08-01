@@ -7,7 +7,8 @@ use app\controllers\PhotoController;
 
 Class Router extends Model
 {
-	private $USER_ACTIONS = ['registration', 'activate', 'login', 'restorepassword', 'settings', 'user'];
+	private $USER_ACTIONS = ['registration', 'activate', 'login', 'logout',
+		'restorepassword', 'settings', 'user', 'token'];
 	private $PHOTO_ACTIONS = ['', 'photo', 'save'];
 
 	protected function getUri()
@@ -24,6 +25,14 @@ Class Router extends Model
 	{
 		return explode('/', $path);
 	}
+
+//	protected function getSecondRoute()
+//	{
+//		$uri = $this->getUri();
+//		$path = $this->getPath($uri);
+//		$routes = $this->getRoutes($path);
+//		return $routes[1];
+//	}
 
 	private function getController($route)
 	{
@@ -45,9 +54,9 @@ Class Router extends Model
 
 		if ($controller_name && count($routes) <= 2)
 		{
+			//проверка на количество routes 1-2
 			if ($controller_name === "PhotoController")
 			{
-
 				$controller = new PhotoController;
 				if ($action === '')
 					$controller->gallery();
@@ -56,16 +65,23 @@ Class Router extends Model
 				//запрос фотографии
 			}
 
-			else if ($controller_name === "UserController")
+			if ($controller_name === "UserController")
 			{
 				$controller = new UserController;
-				$controller->$action();
-				//запрос пользователя
+				if ($action === "user" && count($routes) === 2)
+				{
+					$user = $routes[1];
+					$controller->user($user);
+				}
+				else if ($action !== "user" && count($routes) === 1)
+					$controller->$action();
+				else
+					self::ErrorPage404();
 			}
 		}
-		else self::ErrorPage404();
-
-		}
+		else
+			self::ErrorPage404();
+	}
 
 	private function ErrorPage404()
 	{
