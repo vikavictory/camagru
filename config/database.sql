@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS photos (
 	user_id		INT,
 	photo       LONGBLOB NOT NULL,
 	description	TINYTEXT,
-	created_at	TIMESTAMP);
+	created_at	TIMESTAMP),
+	FOREIGN KEY (user_id)  REFERENCES users (id);
 
 CREATE TABLE IF NOT EXISTS comments (
 	id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,

@@ -11,6 +11,7 @@
 	<a href="/registration">Registration</a>
     <a href="/login">Login</a>
 </div>
+</html>
 <?php
 
 

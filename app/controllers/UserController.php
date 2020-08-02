@@ -48,6 +48,8 @@ class UserController extends Model
 	public function user($user)
 	{
 		$user = User::getUser($user);
+		//$user = new User($user);
+		//$result = $user->getUser($user);
 		if ($user)
 		{
 			$pathView = $this->DIR_PATH . 'useraccount.php';

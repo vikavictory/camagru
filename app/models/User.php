@@ -8,11 +8,61 @@ use PDOException;
 
 class User extends Model
 {
-//	private function validateUserCreation()
-//	{
-//		if (isset($_POST['submit'] && isset($_POST['login']))
-//
-//	}
+	public function getUser($user)
+	{
+		echo $user;
+		//обработка ошибок
+		//что нельзя посмотреть неактивированного пользователя
+		try {
+			$link = self::getDB();
+			$sql = "SELECT id, login, name, surname, email, token, activated FROM users WHERE login=:login";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':login', $user);
+			$sth->execute();
+			$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		} catch( PDOException $e) {
+			$error = $e->getMessage();
+		} catch( Exception $e) {
+			$error = $e->getMessage();
+		}
+		if ($error) {
+			return false;
+		}
+		return $result;
+	}
+
+	private function validateUserCreation()
+	{
+		if (isset($_POST['submit']) && isset($_POST['login']) &&
+		isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['email']) &&
+		isset($_POST['password']) && isset($_POST['password2']))
+		{
+			if (!(preg_match("/^[a-z][a-z0-9]{1,20}$/", $_POST['login'])))
+				return "Некорректный логин. Логин может включать в себя только цифры 
+					и маленькие латинские буквы.";
+			if (!(preg_match("/^[A-Z][a-z]{1,30}$/", $_POST['name'])))
+				return "Некорректное имя.";
+			if (!(preg_match("/^[A-Z][a-z]{1,30}$/", $_POST['surname'])))
+				return "Некорректная фамилия.";
+			if (!(preg_match("/(?=.*[0-9])(?=.*[a-zA-Z])/", $_POST['password'])))
+				return "Некорректный пароль.";
+			if ($_POST['password'] !== $_POST['password2'])
+				return "Пароли не совпадают.";
+		}
+		else
+			return "Введены не все данные";
+		return true;
+	}
+
+	private function sendToken($user)
+	{
+		$data = User::getUser($user);
+		$subject = "Camagru - Confirmation of registration";
+		$message = "Для подтверждения регистрации пройдите по ссылке: " .
+			self::ADDRESS . "/token?id=" . $data['id'] . "&token=" . $data['token'];
+		$result = self::sendMail($data['email'], $subject, $message);
+		return $result;
+	}
 
 	public function createUser()
 	{
@@ -20,6 +70,9 @@ class User extends Model
 		$token = md5($_POST['email'] . "918273645");
 		$password = hash('whirlpool', $_POST['password']);
 		$created_at = $today = date("Y-m-d H:i:s");
+		$validation = self::validateUserCreation();
+		if ($validation !== true)
+			return $validation;
 		try {
 			$sql = "INSERT INTO users (login, name, surname, password, email, token, created_at)
 			VALUES (:login, :name, :surname, :password, :email, :token, :created_at)";
@@ -37,10 +90,17 @@ class User extends Model
 		} catch( Exception $e) {
 			return $e->getMessage();
 		}
+
+		$result = self::sendToken($_POST['login']);
+		if ($result)
+			echo "OK";
+		else
+			echo "KO";
 		return true;
 	}
 
 	public function login()
+
 	{
 		//обработка ошибок: нет пользователя, неверный пароль, неактивирован
 		$link = self::getDB();
@@ -56,7 +116,7 @@ class User extends Model
 			return $e->getMessage();
 		}
 		if (!$result)
-			return "нет такого пользователя";
+			return "Пользователя не существует";
 
 		if (hash('whirlpool', $_POST['password']) === $result['password'])
 		{
@@ -66,10 +126,10 @@ class User extends Model
 				return true;
 			}
 			else
-				return "isn't activated";
+				return "Аккаунт не активирован";
 		}
 		else
-			return "wrong password";
+			return "Неправильный пароль";
 	}
 
 	public function activateAccount($id, $token)
@@ -96,25 +156,25 @@ class User extends Model
 
 	//deleteUser
 
-	public function getUser($user)
-	{
-		//обработка ошибок
-		//что нельзя посмотреть неактивированного пользователя
-		try {
-			$link = self::getDB();
-			$sql = "SELECT id, login, name, surname, email, activated FROM users WHERE login=:login";
-			$sth = $link->prepare($sql);
-			$sth->bindParam(':login', $user);
-			$sth->execute();
-			$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		} catch( PDOException $e) {
-			$error = $e->getMessage();
-		} catch( Exception $e) {
-			$error = $e->getMessage();
-		}
-		if ($error)
-			return false;
-		return $result;
-	}
+//	public function getUser($user)
+//	{
+//		//обработка ошибок
+//		//что нельзя посмотреть неактивированного пользователя
+//		try {
+//			$link = self::getDB();
+//			$sql = "SELECT id, login, name, surname, email, activated FROM users WHERE login=:login";
+//			$sth = $link->prepare($sql);
+//			$sth->bindParam(':login', $user);
+//			$sth->execute();
+//			$result = $sth->fetch(\PDO::FETCH_ASSOC);
+//		} catch( PDOException $e) {
+//			$error = $e->getMessage();
+//		} catch( Exception $e) {
+//			$error = $e->getMessage();
+//		}
+//		if ($error)
+//			return false;
+//		return $result;
+//	}
 
 }
