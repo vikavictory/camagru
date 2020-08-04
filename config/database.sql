@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS photos (
 	user_id		INT,
 	photo       LONGBLOB NOT NULL,
 	description	TINYTEXT,
-	created_at	TIMESTAMP),
-	FOREIGN KEY (user_id)  REFERENCES users (id);
+	created_at	TIMESTAMP,
+	FOREIGN KEY (user_id)  REFERENCES users (id));
 
 CREATE TABLE IF NOT EXISTS comments (
 	id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -37,4 +37,11 @@ CREATE TABLE IF NOT EXISTS likes (
 	created_at	TIMESTAMP,
     FOREIGN KEY (user_id)  REFERENCES users (id),
 	FOREIGN KEY (photo_id)  REFERENCES photos (id));
+
+CREATE TABLE IF NOT EXISTS reset_password (
+    id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    user_id		INT,
+    token       VARCHAR(255),
+    created_at	TIMESTAMP,
+    FOREIGN KEY (user_id)  REFERENCES users (id));
 
