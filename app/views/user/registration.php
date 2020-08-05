@@ -1,15 +1,9 @@
- <html>
-<head>
-	<meta charset="utf-8">
-	<title>Camagru</title>
-	<!-- Р’СЃС‚Р°РІРёС‚СЊ РёРєРѕРЅРєСѓ
-	<link rel="shortcut icon" type="image/png" href="favicon.ico"/> -->
-	<!-- Add Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="/public/js/register.js"></script>
-</head>
-<h1 class="display-4">Create account</h1>
+<html>
+<?php require_once "app/views/header.php" ?>
+<body>
+<?php require_once "app/views/navbar.php" ?>
 
+<h1 class="display-4">Registration</h1>
 <?php
 if (isset($_SESSION['message']))
 {
@@ -55,4 +49,5 @@ if (isset($_SESSION['message']))
 		<br><h6>Already have an account? <a href="/login">Sign In</a></h6>
 	</form>
 </div>
+</body>
 </html>

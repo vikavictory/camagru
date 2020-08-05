@@ -11,4 +11,10 @@ class PhotoController extends Model
 		$pathView = 'app/views/index.php';
 		require_once $pathView;
 	}
+
+	public function photo()
+	{
+		$pathView = 'app/views/photo/photo.php';
+		require_once $pathView;
+	}
 }
