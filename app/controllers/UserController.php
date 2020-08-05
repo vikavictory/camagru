@@ -79,7 +79,32 @@ class UserController extends Model
 			}
 			else
 				echo "error";
+		} else {
+			$pathView = 'app/views/index.php';
+			require_once $pathView;
 		}
+	}
+
+	public function recovery()
+	{
+		//$message = "";
+		if (isset($_POST['submit']) && isset($_POST['email']))
+		{
+			$result = User::sendRecoveryLink();
+			echo $result;
+		}  else if (isset($_POST['submit']) && isset($_POST['password'])) {
+			$result = User::changePassword();
+			echo $result
+		} else if (isset($_GET['token'])) {
+			$result = User::recoveryLinkConfirmation();
+			if (isset($result['user_id'])) {
+				echo "id: " . $result['user_id'];
+			} else {
+				echo $result;
+			}
+		}
+		$pathView = $this->DIR_PATH . 'recovery.php';
+		require_once $pathView;
 	}
 
 	private function ErrorPage404()
@@ -89,5 +114,4 @@ class UserController extends Model
 		header("Status: 404 Not Found");
 		header('Location:'.$host.'404');
 	}
-
 }

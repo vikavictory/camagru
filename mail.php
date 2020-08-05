@@ -3,7 +3,7 @@ date_default_timezone_set('Europe/Moscow');
 ini_set("SMTP", "127.0.0.1");
 ini_set("smtp_port", "25");
 
-$to = 'sergius.didenko@yandex.ru';
+$to = 'vika.ru96.96@yandex.ru';
 $subject = "Camagru";
 
 $headers = "MIME-Version: 1.0\r\n";

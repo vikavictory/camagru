@@ -8,7 +8,7 @@ use app\controllers\PhotoController;
 Class Router extends Model
 {
 	private $USER_ACTIONS = ['registration', 'activate', 'login', 'logout',
-		'restorepassword', 'settings', 'user', 'token'];
+		'restorepassword', 'settings', 'user', 'token', 'recovery'];
 	private $PHOTO_ACTIONS = ['', 'photo', 'save'];
 
 	protected function getUri()
