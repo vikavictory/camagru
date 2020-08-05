@@ -4,8 +4,9 @@ namespace app\controllers;
 
 use app\Model;
 use app\models\User;
+use app\Router;
 
-class UserController extends Model
+class UserController extends Router
 {
 	private $DIR_PATH = 'app/views/user/';
 
@@ -48,8 +49,6 @@ class UserController extends Model
 	public function user($user)
 	{
 		$user = User::getUser($user);
-		//$user = new User($user);
-		//$result = $user->getUser($user);
 		if ($user)
 		{
 			$pathView = $this->DIR_PATH . 'useraccount.php';
@@ -91,20 +90,30 @@ class UserController extends Model
 		if (isset($_POST['submit']) && isset($_POST['email']))
 		{
 			$result = User::sendRecoveryLink();
-			echo $result;
-		}  else if (isset($_POST['submit']) && isset($_POST['password'])) {
-			$result = User::changePassword();
-			echo $result
-		} else if (isset($_GET['token'])) {
-			$result = User::recoveryLinkConfirmation();
-			if (isset($result['user_id'])) {
-				echo "id: " . $result['user_id'];
-			} else {
-				echo $result;
-			}
+			echo $result; // передать потом во view
 		}
 		$pathView = $this->DIR_PATH . 'recovery.php';
 		require_once $pathView;
+	}
+
+	public function changepassword()
+	{
+		if (isset($_GET['token'])) {
+			$result = User::recoveryLinkConfirmation();
+			if (isset($result['user_id'])) {
+				echo "id: " . $result['user_id'];
+				$pathView = $this->DIR_PATH . 'changepassword.php';
+				require_once $pathView;
+				if (isset($_POST['submit']) && isset($_POST['password'])) {
+					$result = User::changePassword($result['user_id']);
+					echo $result;
+				}
+			} else {
+				echo $result;
+			}
+		} else {
+			self::ErrorPage404();
+		}
 	}
 
 	private function ErrorPage404()

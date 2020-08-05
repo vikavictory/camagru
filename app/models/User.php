@@ -32,6 +32,8 @@ class User extends Model
 
 	private function validateUserCreation()
 	{
+		//добавить длину пароля
+
 		if (isset($_POST['submit']) && isset($_POST['login']) &&
 		isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['email']) &&
 		isset($_POST['password']) && isset($_POST['password2']))
@@ -212,7 +214,7 @@ class User extends Model
 
 			$subject = "Camagru - Password Recovery";
 			$message = "Для смены пароля пройдите по ссылке: " .
-				self::ADDRESS . "/recovery?token=" . $token;
+				self::ADDRESS . "/changepassword?token=" . $token;
 			$result = self::sendMail($_POST['email'], $subject, $message);
 			return $result;
 		}
@@ -242,10 +244,67 @@ class User extends Model
 		}
 	}
 
-	public function changePassword()
+	public function changePassword($user_id)
 	{
-		// проверка пароля (разбить функцию валидации на несколько);
-		// проверить что пароль не совпадает с предыдущим;
+		if (isset($_POST['submit']) && isset($_POST['password']) &&
+		isset($_POST['password2'])) {
+			$new_password = hash('whirlpool', $_POST['password']);
+			// проверка пароля (разбить функцию валидации на несколько)
+			////вынести проверку
+			if (!(preg_match("/(?=.*[0-9])(?=.*[a-zA-Z])/", $_POST['password'])))
+				return "Некорректный пароль.";
+			if ($_POST['password'] !== $_POST['password2'])
+				return "Пароли не совпадают.";
+
+			// проверить что пароль не совпадает с предыдущим;
+			$link = self::getDB();
+			try {
+				$sql = "SELECT password FROM users WHERE id=:id";
+				$sth = $link->prepare($sql);
+				$sth->bindParam(':id', $user_id);
+				$sth->execute();
+				$result = $sth->fetch(\PDO::FETCH_ASSOC);
+			} catch( PDOException $e) {
+				return $e->getMessage();
+			} catch( Exception $e) {
+				return $e->getMessage();
+			}
+
+			if ($new_password === $result['password']) {
+				return "пароль совпадает с текущим";
+			}
+
+			//обновить пароль
+			try {
+				$sql = "UPDATE users SET password=:password WHERE id=:id";
+				$sth = $link->prepare($sql);
+				$sth->bindParam(':id', $user_id);
+				$sth->bindParam(':password', $new_password);
+				$sth->execute();
+			} catch( PDOException $e) {
+				return $e->getMessage();
+			} catch( Exception $e) {
+				return $e->getMessage();
+			}
+
+			//удалить запись из таблицы reset_password
+			try {
+				$sql = "DELETE FROM reset_password WHERE user_id=:id";
+				$sth = $link->prepare($sql);
+				$sth->bindParam(':id', $user_id);
+				$sth->execute();
+			} catch( PDOException $e) {
+				return $e->getMessage();
+			} catch( Exception $e) {
+				return $e->getMessage();
+			}
+
+			return "OK";
+		}
+
+
+
+
 		//
 	}
 
