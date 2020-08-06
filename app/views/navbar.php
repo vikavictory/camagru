@@ -16,10 +16,16 @@
 		<ul class="navbar-nav">
 			<?php if (isset($_SESSION['user']) && $_SESSION['user'] !== "") { ?>
                 <li class="nav-item">
+                    <a class="nav-link" href="/photo">Camera</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/user/<?php echo $_SESSION['user'];?>">My page</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/settings">Settings</a>
                 </li>
 			<?php } else {?>
 			    <li class="nav-item">
