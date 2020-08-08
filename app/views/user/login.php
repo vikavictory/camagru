@@ -6,10 +6,9 @@
 <h1 class="display-4">Login</h1>
 
 <?php
-if (isset($_SESSION['message']))
-{
-	echo "<p>" . $_SESSION['message'] . "</p>";
-	$_SESSION['message'] = "";
+if ($message !== "") {
+	echo "<p>" . $message . "</p>";
+	$message = "";
 }
 ?>
 

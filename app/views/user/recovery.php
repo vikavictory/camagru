@@ -4,6 +4,13 @@
 <?php require_once "app/views/navbar.php" ?>
 <h1 class="display-4"> Reset password </h1>
 
+<?php
+if ($message !== "") {
+	echo "<p>" . $message . "</p>";
+	$message = "";
+}
+?>
+
 <div class="registration-form">
     <form name="resetpassword" method="post" action="" >
         E-mail:<br>

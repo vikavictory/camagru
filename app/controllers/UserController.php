@@ -10,28 +10,22 @@ class UserController extends Router
 {
 	private $DIR_PATH = 'app/views/user/';
 
-	public function registration()
+	public function registration() //+
 	{
-		if (isset($_POST['submit']))
-		{
+		if (isset($_POST['submit'])) {
 			$result = User::createUser();
-			if ($result === true)
-				$_SESSION['message'] = "Ваш аккаунт создан, для его активации 
-				необходимо перейти по ссылке, которая была направлена Вам на почту";
-			else
-			{
-				if (strpos($result, "login"))
-					$message = "Такой пользователь уже зарегестрирован.";
-				if (strpos($result, "email"))
-					$message = "Такая почта уже зарегестрирована.";
-				$_SESSION['message'] = "Произошла ошибка при регистрации. " . $message;
+			if ($result === true) {
+				$message = "Ваш аккаунт создан, для его активации 
+				необходимо перейти по ссылке, направленной Вам на почту";
+			} else {
+				$message = $result;
 			}
 		}
 		$pathView = $this->DIR_PATH . 'registration.php';
 		require_once $pathView;
 	}
 
-	public function login()
+	public function login() //+
 	{
 		if (isset($_POST['submit']))
 		{
@@ -40,7 +34,6 @@ class UserController extends Router
 				header('Location: /user/' . $_SESSION['user']);
 			else
 				$message = $result;
-			$_SESSION['message'] = $message;;
 		}
 		$pathView = $this->DIR_PATH . 'login.php';
 		require_once $pathView;
@@ -58,59 +51,61 @@ class UserController extends Router
 			self::ErrorPage404();
 	}
 
-	public function logout()
+	public function logout() //+
 	{
 		$_SESSION['user'] = "";
 		header('Location: /');
 	}
 
-	public function token()
+	public function token() //+
 	{
 		if (isset($_GET['token']) && isset($_GET['id']))
 		{
 			$token = $_GET['token'];
 			$id = $_GET['id'];
 			$result = User::activateAccount($id, $token);
-			if ($result)
-			{
-				$pathView = $this->DIR_PATH . 'token.php';
-				require_once $pathView;
+			if ($result === true) {
+				$message = "Аккаунт активирован";
+			} else {
+				$message = $result;
 			}
-			else
-				echo "error";
+			$pathView = $this->DIR_PATH . 'token.php';
+			require_once $pathView;
 		} else {
 			$pathView = 'app/views/index.php';
 			require_once $pathView;
 		}
 	}
 
-	public function recovery()
+	public function recovery() //+
 	{
-		//$message = "";
-		if (isset($_POST['submit']) && isset($_POST['email']))
+		if (isset($_POST['submit']))
 		{
 			$result = User::sendRecoveryLink();
-			echo $result; // передать потом во view
+			if ($result === true) {
+				$message = "Ccылка на восстановление пароля отправлена Вам на почту";
+			} else {
+				$message = $result;
+			}
 		}
 		$pathView = $this->DIR_PATH . 'recovery.php';
 		require_once $pathView;
 	}
 
-	public function changepassword()
+	public function changepassword() //+
 	{
 		if (isset($_GET['token'])) {
 			$result = User::recoveryLinkConfirmation();
 			if (isset($result['user_id'])) {
-				echo "id: " . $result['user_id'];
-				$pathView = $this->DIR_PATH . 'changepassword.php';
-				require_once $pathView;
-				if (isset($_POST['submit']) && isset($_POST['password'])) {
-					$result = User::changePassword($result['user_id']);
-					echo $result;
+				if (isset($_POST['submit'])) {
+					$changeResult = User::changePassword($result['user_id']);
+					$message = $changeResult;
 				}
 			} else {
-				echo $result;
+				$message = $result;
 			}
+			$pathView = $this->DIR_PATH . 'changepassword.php';
+			require_once $pathView;
 		} else {
 			self::ErrorPage404();
 		}

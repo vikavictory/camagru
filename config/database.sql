@@ -4,8 +4,8 @@ USE camagru;
 
 CREATE TABLE IF NOT EXISTS users (
     id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    login		CHAR(15) NOT NULL UNIQUE,
-    email		CHAR(40) NOT NULL UNIQUE,
+    login		CHAR(20) NOT NULL UNIQUE,
+    email		CHAR(50) NOT NULL UNIQUE,
     `name`		VARCHAR(30) NOT NULL,
     surname		VARCHAR(30) NOT NULL,
     password	VARCHAR(255) NOT NULL,

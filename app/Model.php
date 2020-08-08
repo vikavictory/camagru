@@ -26,6 +26,7 @@ class Model
 		ini_set("SMTP", "127.0.0.1");
 		ini_set("smtp_port", "25");
 		$message = wordwrap($message, 70, "\r\n");
+		//echo $message;
 		$headers = "MIME-Version: 1.0\r\n";
 		$headers .= "Content-type: text/html; charset=utf-8\r\n";
 		$headers .= "Content-Transfer-Encoding: utf-8\r\n";

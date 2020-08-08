@@ -26,14 +26,6 @@ Class Router extends Model
 		return explode('/', $path);
 	}
 
-//	protected function getSecondRoute()
-//	{
-//		$uri = $this->getUri();
-//		$path = $this->getPath($uri);
-//		$routes = $this->getRoutes($path);
-//		return $routes[1];
-//	}
-
 	private function getController($route)
 	{
 		if (array_search($route, $this->USER_ACTIONS) !== FALSE)

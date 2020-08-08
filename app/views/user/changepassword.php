@@ -3,6 +3,16 @@
 <body>
 <?php require_once "app/views/navbar.php" ?>
 <h1 class="display-4"> Change password </h1>
+
+<?php
+if ($message !== "") {
+	echo "<p>" . $message . "</p>";
+	$message = "";
+}
+
+if (isset($result['user_id'])) {
+?>
+
 <form name="newpassword" method="post" action="" >
 	Password:<br>
 	<svg class="bi bi-lock" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -18,3 +28,5 @@
 	<br><input class="btn btn-primary" type="submit" name="submit" value="SignUp"><br>
 </form>
 </body>
+
+<?php } ?>
