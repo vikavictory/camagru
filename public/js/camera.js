@@ -16,7 +16,7 @@ window.onload = function () {
 
         var img = new Image();
         img.src = base64dataUrl;
-        window.document.body.appendChild(img);
+       // window.document.body.appendChild(img);
     }
 
     button.addEventListener('click', captureMe);

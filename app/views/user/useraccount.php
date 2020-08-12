@@ -6,6 +6,11 @@
 	<p> Online <?php echo($_SESSION['user']);?> </p>
     <?php if ($user['activated'] === "1")
     {
+		if ($user['photo'] === NULL) {
+			echo "<img src=\"/public/img/user.png\" alt=\"Фото пользователя\" width=150px>";
+		} else {
+			echo "<img src=\"/storage/userphoto/" . $user['photo'] . "\" alt=\"Фото пользователя\" width=150px>";
+        }
         echo "<p> This page of " . $user['login'] . "</p>";
         echo "<p> Name " . $user['name'] . "</p>";
         echo "<p> Surame " . $user['surname'] . "</p>";
@@ -13,6 +18,5 @@
     }
 	else
 	    echo "<p> Доступ запрещен, пользователь не активирован </p>"; ?>
-	<a href="/logout">Logout</a>
 </body>
 </html>

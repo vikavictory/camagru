@@ -15,7 +15,7 @@ class User extends Model
 		//что нельзя посмотреть неактивированного пользователя
 		try {
 			$link = self::getDB();
-			$sql = "SELECT id, login, name, surname, email, token, activated FROM users WHERE login=:login";
+			$sql = "SELECT id, login, name, surname, email, token, activated, photo FROM users WHERE login=:login";
 			$sth = $link->prepare($sql);
 			$sth->bindParam(':login', $user);
 			$sth->execute();

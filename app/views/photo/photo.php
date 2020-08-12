@@ -2,6 +2,13 @@
 <?php require_once "app/views/header.php" ?>
 <body>
 <?php require_once "app/views/navbar.php" ?>
+
+
+<input id="try" type="button" value="TRY"/>
+<div id="showtry"></div>
+<script src="/public/js/try.js"></script>
+
+
 <link rel="stylesheet" type="text/css" href="/public/css/camera.css">
 
 <div class="item">
