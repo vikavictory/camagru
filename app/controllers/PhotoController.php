@@ -16,7 +16,7 @@ class PhotoController extends Model
 	{
 		$pathView = 'app/views/photo/photo.php';
 		require_once $pathView;
-		echo $_SERVER['REMOTE_ADDR'];
+		//echo $_SERVER['REMOTE_ADDR'];
 		//var_dump($_FILES);
 		if (isset($_FILES['image'])) {
 			$image = $_FILES['image'];

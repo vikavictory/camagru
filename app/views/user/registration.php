@@ -12,7 +12,7 @@ if ($message !== "") {
 ?>
 
 <div class="registration-form">
-	<form name="registration" method="post" action="">
+	<form name="registration" method="post" action="" enctype="multipart/form-data">
 		Login:<br>
 		<svg class="bi bi-person-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 			<path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
@@ -44,6 +44,8 @@ if ($message !== "") {
 			<path fill-rule="evenodd" d="M4.5 4a3.5 3.5 0 117 0v3h-1V4a2.5 2.5 0 00-5 0v3h-1V4z" clip-rule="evenodd"/>
 		</svg>
 		<input type="password" name="password2"  required><br>
+        Photo:<br>
+        <input type="file" name="image">
 		<br><input class="btn btn-primary" type="submit" name="submit" value="SignUp"><br>
 		<br><h6>Already have an account? <a href="/login">Sign In</a></h6>
 	</form>
