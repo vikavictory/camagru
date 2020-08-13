@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\Model;
 use app\models\UserValidation;
+use app\models\Photo;
 use Exception;
 use PDOException;
 
@@ -43,16 +44,27 @@ class User extends Model
 
 	public static function createUser() //+
 	{
+		$photo = null;
 		if (($validation = UserValidation::validateUserCreation()) !== true) {
 			return $validation;
+		}
+		echo $_FILES['image']['name'];
+		if ($_FILES['image']['name']) {
+			$result = Photo::loadPhoto('/storage/userphoto/');
+			if (isset($result['error'])) {
+				return $result['error'];
+			}
+			if (isset($result['photoName'])) {
+				$photo = $result['photoName'];
+			}
 		}
 		$token = md5($_POST['email'] . "918273645");
 		$password = hash('whirlpool', $_POST['password']);
 		$created_at = date("Y-m-d H:i:s");
 		try {
 			$link = self::getDB();
-			$sql = "INSERT INTO users (login, name, surname, password, email, token, created_at)
-			VALUES (:login, :name, :surname, :password, :email, :token, :created_at)";
+			$sql = "INSERT INTO users (login, name, surname, password, email, token, photo, created_at)
+			VALUES (:login, :name, :surname, :password, :email, :token, :photo, :created_at)";
 			$sth = $link->prepare($sql);
 			$sth->bindParam(':login', $_POST['login']);
 			$sth->bindParam(':name', $_POST['name']);
@@ -60,6 +72,7 @@ class User extends Model
 			$sth->bindParam(':password', $password);
 			$sth->bindParam(':email', $_POST['email']);
 			$sth->bindParam(':token', $token);
+			$sth->bindParam(':photo', $photo);
 			$sth->bindParam(':created_at', $created_at);
 			$sth->execute();
 		} catch( PDOException $e) {

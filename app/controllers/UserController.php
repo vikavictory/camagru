@@ -13,8 +13,8 @@ class UserController extends Router
 	public function registration() //+
 	{
 		if (isset($_POST['submit'])) {
-			var_dump($_POST);
-			var_dump($_FILES);
+			//var_dump($_POST);
+			//var_dump($_FILES);
 			$result = User::createUser();
 			if ($result === true) {
 				$message = "Ваш аккаунт создан, для его активации 

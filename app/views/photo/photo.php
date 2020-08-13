@@ -3,13 +3,8 @@
 <body>
 <?php require_once "app/views/navbar.php" ?>
 
-
-<input id="try" type="button" value="TRY"/>
-<div id="showtry"></div>
-<script src="/public/js/try.js"></script>
-
-
 <link rel="stylesheet" type="text/css" href="/public/css/camera.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 <div class="item">
     <span> video </span>
@@ -22,6 +17,7 @@
 </div>
 
 <input id="button" type="button" value="Snap" />
+<input id="saveButton" type="button" value="Save" />
 
 <script src="/public/js/camera.js"></script>
 
