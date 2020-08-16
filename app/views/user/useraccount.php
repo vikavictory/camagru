@@ -9,8 +9,9 @@
 		if ($user['photo'] === NULL) {
 			echo "<img src=\"/public/img/user.png\" alt=\"Фото пользователя\" width=150px>";
 		} else {
-			echo "<img src=\"/storage/userphoto/" . $user['photo'] . "\" alt=\"Фото пользователя\" width=150px>";
-        }
+		    //добавлять data:image/png;base64, при создании и хранить закодированную
+			echo "<img src=\"data:image/png;base64," . base64_encode($user['photo']) . "\" alt=\"Фото пользователя\" width=150px>";
+		}
         echo "<p> This page of " . $user['login'] . "</p>";
         echo "<p> Name " . $user['name'] . "</p>";
         echo "<p> Surame " . $user['surname'] . "</p>";

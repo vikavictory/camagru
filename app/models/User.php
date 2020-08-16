@@ -48,9 +48,9 @@ class User extends Model
 		if (($validation = UserValidation::validateUserCreation()) !== true) {
 			return $validation;
 		}
-		echo $_FILES['image']['name'];
+		//echo $_FILES['image']['name'];
 		if ($_FILES['image']['name']) {
-			$result = Photo::loadPhoto('/storage/userphoto/');
+			$result = Photo::savePhoto('/storage/userphoto/');
 			if (isset($result['error'])) {
 				return $result['error'];
 			}
@@ -61,10 +61,11 @@ class User extends Model
 		$token = md5($_POST['email'] . "918273645");
 		$password = hash('whirlpool', $_POST['password']);
 		$created_at = date("Y-m-d H:i:s");
+		$activated = 1;
 		try {
 			$link = self::getDB();
-			$sql = "INSERT INTO users (login, name, surname, password, email, token, photo, created_at)
-			VALUES (:login, :name, :surname, :password, :email, :token, :photo, :created_at)";
+			$sql = "INSERT INTO users (login, name, surname, password, email, token, photo, created_at, activated)
+			VALUES (:login, :name, :surname, :password, :email, :token, :photo, :created_at, :activated)";
 			$sth = $link->prepare($sql);
 			$sth->bindParam(':login', $_POST['login']);
 			$sth->bindParam(':name', $_POST['name']);
@@ -74,13 +75,16 @@ class User extends Model
 			$sth->bindParam(':token', $token);
 			$sth->bindParam(':photo', $photo);
 			$sth->bindParam(':created_at', $created_at);
+			//строчка для windows
+			$sth->bindParam(':activated', $activated);
 			$sth->execute();
 		} catch( PDOException $e) {
 			return $e->getMessage();
 		} catch( Exception $e) {
 			return $e->getMessage();
 		}
-		$result = self::sendToken($_POST['login']);
+		//$result = self::sendToken($_POST['login']);
+		$result = true;
 		if ($result) {
 			return true;
 		} else {
@@ -95,7 +99,7 @@ class User extends Model
 		}
 		try {
 			$link = self::getDB();
-			$sql = "SELECT password, activated FROM users WHERE login=:login";
+			$sql = "SELECT password, activated, id FROM users WHERE login=:login";
 			$sth = $link->prepare($sql);
 			$sth->bindParam(':login', $_POST['login']);
 			$sth->execute();
@@ -110,6 +114,7 @@ class User extends Model
 		if (hash('whirlpool', $_POST['password']) === $result['password']) {
 			if ($result['activated'] === '1') {
 				$_SESSION['user'] = $_POST['login'];
+				$_SESSION['user_id'] = $result['id'];
 				return true;
 			} else {
 				return "Аккаунт не активирован";
@@ -279,6 +284,4 @@ class User extends Model
 		}
 		return "Ваш пароль успешно изменен";
 	}
-
-	//deleteUser
 }

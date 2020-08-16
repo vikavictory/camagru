@@ -5,12 +5,14 @@ window.onload = function () {
     var button = document.getElementById('button');
     var context = canvas.getContext('2d')
     var img = new Image();
+    var base64dataUrl ;
 
     var captureMe = function () {
         context.translate(canvas.width, 0);
         context.scale(-1, 1);
         context.drawImage(video, 0, 0, video.width, video.height);
-        var base64dataUrl = canvas.toDataURL('image/png');
+        base64dataUrl = canvas.toDataURL('image/png');
+        console.log(base64dataUrl);
         context.setTransform(1, 0, 0, 1, 0, 0);
 
         // отправить на сервер в этом месте
@@ -19,15 +21,9 @@ window.onload = function () {
 
     var saveMe = function () {
         var xhr = new XMLHttpRequest();
-
-
-        xhr.open('POST', '/photo/save', false);
-
-
-        xhr.open("POST", '/submit', true);
+        xhr.open('POST', '/save', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-
+        xhr.send("photo=" + encodeURIComponent(base64dataUrl));
     }
 
     button.addEventListener('click', captureMe);
