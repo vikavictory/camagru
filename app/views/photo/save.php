@@ -4,3 +4,7 @@
 <?php require_once "app/views/navbar.php" ?>
 
 
+</body>
+</html>
+
+

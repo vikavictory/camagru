@@ -6,7 +6,9 @@
 <div id="gallery">
 	<?php foreach ($result as $value) {
 
-	    echo "<img src=\"" . $value['photo'] . "\" alt=\"Фото пользователя\" width=150px>";
+	    echo "<p><a href=\"\photo\\" . $value['id'] . "\">
+                <img src=\"" . $value['photo'] . "\" alt=\"Фото пользователя\" width=150px>
+             </a></p>";
 
 	} ?>
 </div>

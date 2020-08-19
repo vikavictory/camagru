@@ -29,6 +29,30 @@ class User extends Model
 		if ($error) {
 			return false;
 		}
+		$userPhotos = Photo::getUserPhoto($result['id']);
+		if ($userPhotos) {
+			$result['photos'] = $userPhotos;
+		}
+		return $result;
+	}
+
+	public static function getUserLogin($user_id) {
+		try {
+			$link = self::getDB();
+			$sql = "SELECT login FROM users WHERE id=:id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':id', $user_id);
+			$sth->execute();
+			$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		} catch( PDOException $e) {
+			$error = $e->getMessage();
+		} catch( Exception $e) {
+			$error = $e->getMessage();
+		}
+		if ($error) {
+			return false;
+		}
+
 		return $result;
 	}
 
@@ -48,22 +72,23 @@ class User extends Model
 		if (($validation = UserValidation::validateUserCreation()) !== true) {
 			return $validation;
 		}
-		//echo $_FILES['image']['name'];
 		if ($_FILES['image']['name']) {
-			$result = Photo::savePhoto('/storage/userphoto/');
+			$result = Photo::getBase64();
 			if (isset($result['error'])) {
 				return $result['error'];
 			}
-			if (isset($result['photoName'])) {
-				$photo = $result['photoName'];
+			if (isset($result['photo'])) {
+				$photo = $result['photo'];
 			}
 		}
 		$token = md5($_POST['email'] . "918273645");
 		$password = hash('whirlpool', $_POST['password']);
 		$created_at = date("Y-m-d H:i:s");
+		//строчка для автоматической активации - убрать
 		$activated = 1;
 		try {
 			$link = self::getDB();
+			//убрать активацию потом
 			$sql = "INSERT INTO users (login, name, surname, password, email, token, photo, created_at, activated)
 			VALUES (:login, :name, :surname, :password, :email, :token, :photo, :created_at, :activated)";
 			$sth = $link->prepare($sql);
@@ -75,7 +100,7 @@ class User extends Model
 			$sth->bindParam(':token', $token);
 			$sth->bindParam(':photo', $photo);
 			$sth->bindParam(':created_at', $created_at);
-			//строчка для windows
+			//строчка для автоматической активации - убрать
 			$sth->bindParam(':activated', $activated);
 			$sth->execute();
 		} catch( PDOException $e) {
@@ -240,7 +265,6 @@ class User extends Model
 			return $message;
 		}
 		$new_password = hash('whirlpool', $_POST['password']);
-
 		// проверка, что пароль не совпадает с предыдущим;
 		try {
 			$link = self::getDB();
@@ -257,7 +281,6 @@ class User extends Model
 		if ($new_password === $result['password']) {
 			return "Пароль совпадает с текущим";
 		}
-
 		//обновление пароля
 		try {
 			$sql = "UPDATE users SET password=:password WHERE id=:id";
@@ -270,7 +293,6 @@ class User extends Model
 		} catch( Exception $e) {
 			return $e->getMessage();
 		}
-
 		//удаление записи из таблицы reset_password
 		try {
 			$sql = "DELETE FROM reset_password WHERE user_id=:id";

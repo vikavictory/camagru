@@ -9,7 +9,7 @@ Class Router extends Model
 {
 	private $USER_ACTIONS = ['registration', 'activate', 'login', 'logout',
 		'settings', 'user', 'token', 'recovery', 'changepassword'];
-	private $PHOTO_ACTIONS = ['', 'photo', 'save', 'try'];
+	private $PHOTO_ACTIONS = ['', 'photo', 'save', 'try', 'preview'];
 
 	protected function getUri()
 	{
@@ -50,29 +50,31 @@ Class Router extends Model
 			if ($controller_name === "PhotoController")
 			{
 				$controller = new PhotoController;
-				if ($action === '')
+				if ($action === '') {
 					$controller->gallery();
-				else
+				} else if ($action === "photo" && count($routes) === 2) {
+					$photo_id = $routes[1];
+					$controller->getOnePhoto($photo_id);
+				} else {
 					$controller->$action();
-				//запрос фотографии
+				}
 			}
 
 			if ($controller_name === "UserController")
 			{
 				$controller = new UserController;
-				if ($action === "user" && count($routes) === 2)
-				{
+				if ($action === "user" && count($routes) === 2) {
 					$user = $routes[1];
 					$controller->user($user);
-				}
-				else if ($action !== "user" && count($routes) === 1)
+				} else if ($action !== "user" && count($routes) === 1) {
 					$controller->$action();
-				else
+				} else {
 					self::ErrorPage404();
+				}
 			}
-		}
-		else
+		} else {
 			self::ErrorPage404();
+		}
 	}
 
 	private function ErrorPage404()

@@ -10,14 +10,23 @@
 			echo "<img src=\"/public/img/user.png\" alt=\"Фото пользователя\" width=150px>";
 		} else {
 		    //добавлять data:image/png;base64, при создании и хранить закодированную
-			echo "<img src=\"data:image/png;base64," . base64_encode($user['photo']) . "\" alt=\"Фото пользователя\" width=150px>";
+			echo "<img src=\"" . $user['photo'] . "\" alt=\"Фото пользователя\" width=150px>";
 		}
         echo "<p> This page of " . $user['login'] . "</p>";
         echo "<p> Name " . $user['name'] . "</p>";
         echo "<p> Surame " . $user['surname'] . "</p>";
         echo "<p> Email: " . $user['email'] . "</p>";
-    }
-	else
-	    echo "<p> Доступ запрещен, пользователь не активирован </p>"; ?>
+        if (isset($user['photos'])) {
+            echo "<div id=\"gallery\">";
+			foreach ($user['photos'] as $value) {
+				echo "<p><a href=\"\photo\\" . $value['id'] . "\">
+                        <img src=\"" . $value['photo'] . "\" alt=\"Фото пользователя\" width=150px>
+                      </a></p>";
+			}
+			echo "</div>";
+        }
+    } else {
+        echo "<p> Доступ запрещен, пользователь не активирован </p>";
+    } ?>
 </body>
 </html>

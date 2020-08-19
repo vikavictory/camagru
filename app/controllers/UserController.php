@@ -10,6 +10,13 @@ class UserController extends Router
 {
 	private $DIR_PATH = 'app/views/user/';
 
+	function debug($str)
+	{
+		echo '<pre>';
+		var_dump($str);
+		echo '</pre>';
+	}
+
 	public function registration() //+
 	{
 		if (isset($_POST['submit'])) {
@@ -43,19 +50,23 @@ class UserController extends Router
 
 	public function user($user)
 	{
+
 		$user = User::getUser($user);
 		if ($user)
 		{
+			//$this->debug($user);
 			$pathView = $this->DIR_PATH . 'useraccount.php';
 			require_once $pathView;
 		}
-		else
+		else {
 			self::ErrorPage404();
+		}
 	}
 
 	public function logout() //+
 	{
 		$_SESSION['user'] = "";
+		$_SESSION['user_id'] = "";
 		header('Location: /');
 	}
 

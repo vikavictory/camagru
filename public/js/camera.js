@@ -14,9 +14,7 @@ window.onload = function () {
         base64dataUrl = canvas.toDataURL('image/png');
         console.log(base64dataUrl);
         context.setTransform(1, 0, 0, 1, 0, 0);
-
-        // отправить на сервер в этом месте
-        img.src = base64dataUrl; // window.document.body.appendChild(img);
+        img.src = base64dataUrl;
     }
 
     var saveMe = function () {
