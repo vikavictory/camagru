@@ -293,6 +293,7 @@ class User extends Model
 		} catch( Exception $e) {
 			return $e->getMessage();
 		}
+
 		//удаление записи из таблицы reset_password
 		try {
 			$sql = "DELETE FROM reset_password WHERE user_id=:id";

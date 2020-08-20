@@ -9,7 +9,6 @@
 		if ($user['photo'] === NULL) {
 			echo "<img src=\"/public/img/user.png\" alt=\"Фото пользователя\" width=150px>";
 		} else {
-		    //добавлять data:image/png;base64, при создании и хранить закодированную
 			echo "<img src=\"" . $user['photo'] . "\" alt=\"Фото пользователя\" width=150px>";
 		}
         echo "<p> This page of " . $user['login'] . "</p>";

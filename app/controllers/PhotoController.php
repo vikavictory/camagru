@@ -20,7 +20,6 @@ class PhotoController extends Model
 	public function gallery()
 	{
 		$result = Photo::getGallery();
-		//$this->debug($result);
 		$pathView = 'app/views/index.php';
 		require_once $pathView;
 	}
@@ -34,21 +33,6 @@ class PhotoController extends Model
 			} else {
 				$photo = $result['photo'];
 				$result = Photo::saveToDB($photo, $_SESSION['user_id']);
-				//$_SESSION['photo'] = $photo;
-				//header('Location: /preview');
-
-
-				//if ( $curl = curl_init() ) {
-				//	curl_setopt($curl, CURLOPT_URL, 'http://localhost/preview');
-				//	curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
-				//	curl_setopt($curl, CURLOPT_POST, true);
-				//	curl_setopt($curl, CURLOPT_POSTFIELDS, "a=4&b=7");
-				//	$out = curl_exec($curl);
-				//	echo $out;
-				//	curl_close($curl);
-				//}
-
-
 			}
 		}
 		$pathView = 'app/views/photo/photo.php';
@@ -72,10 +56,6 @@ class PhotoController extends Model
 		$this->debug($_POST);
 		$pathView = 'app/views/photo/save.php';
 		require_once $pathView;
-		//$this->debug($_POST);
-		//$this->debug($_POST['photo']);
-		//$result = Photo::saveToDB($_POST['photo'], $_SESSION['user_id']);
-		//header('Location: /user/' . $_SESSION['user']);
 	}
 
 	public function getOnePhoto($photo_id) {

@@ -7,7 +7,7 @@
 	echo "<p> User " . "<a href=\"\user\\" . $photo['login'] . "\">" . $photo['login'] . "</a></p>";
 	echo "<p> Description " . $photo['description'] . "</p>";
 	echo "<p> Created at  " . $photo['created_at'] . "</p>";
-	echo "<img src=\"" . $photo['photo'] . "\" alt=\"Фото пользователя\" width=150px>";
+	echo "<img src=\"" . $photo['photo'] . "\" alt=\"Фото пользователя\" width=300px>";
 } ?>
 
 </body>
