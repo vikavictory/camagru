@@ -23,10 +23,11 @@ CREATE TABLE IF NOT EXISTS photos (
 	FOREIGN KEY (user_id)  REFERENCES users (id));
 
 CREATE TABLE IF NOT EXISTS comments (
-	id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-	photo_id	INT ,
-	user_id		INT ,
-	created_at	TIMESTAMP,
+	id			    INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	photo_id	    INT ,
+	user_id		    INT ,
+	comment_text    TINYTEXT,
+	created_at	    TIMESTAMP,
 	FOREIGN KEY (user_id)  REFERENCES users (id),
 	FOREIGN KEY (photo_id)  REFERENCES photos (id));
 

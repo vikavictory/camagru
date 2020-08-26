@@ -157,8 +157,7 @@ class Photo extends Model
 		if (isset($_GET['page'])) {
 			$pageNumber = $_GET['page'];
 			//обработать, что число
-			if (1 <= $pageNumber && $pageNumber <= $pageCount) {
-
+			if ($pageNumber >= 1&& $pageNumber <= $pageCount) {
 				$from += 5 * ($pageNumber - 1);
 			}
 			else {
@@ -184,7 +183,9 @@ class Photo extends Model
 		if ($error) {
 			return false;
 		}
-		return $result;
+		return ["photos" => $result,
+				"pageCount" => (int)$pageCount,
+				"pageNumber" => (int)$pageNumber];
 	}
 
 	public static function getUserPhoto($user_id) {
@@ -209,7 +210,7 @@ class Photo extends Model
 	public static function getPhoto($photo_id) {
 		try {
 			$link = self::getDB();
-			$sql = "SELECT user_id, photo, description, created_at FROM photos WHERE id=:id";
+			$sql = "SELECT id, user_id, photo, description, created_at FROM photos WHERE id=:id";
 			$sth = $link->prepare($sql);
 			$sth->bindParam(':id', $photo_id);
 			$sth->execute();
@@ -242,6 +243,24 @@ class Photo extends Model
 			return false;
 		}
 		return $result;
+	}
+
+	public static function deletePhoto($photo_id) {
+		try {
+			$link = self::getDB();
+			$sql = "DELETE FROM photos WHERE id=:id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':id', $photo_id);
+			$sth->execute();
+		} catch( PDOException $e) {
+			$error = $e->getMessage();
+		} catch( Exception $e) {
+			$error = $e->getMessage();
+		}
+		if ($error) {
+			return false;
+		}
+		return false;
 	}
 
 }

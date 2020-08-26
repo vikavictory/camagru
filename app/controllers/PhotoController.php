@@ -58,20 +58,31 @@ class PhotoController extends Model
 		require_once $pathView;
 	}
 
-	public function getOnePhoto($photo_id) {
-		$photo = Photo::getPhoto($photo_id);
-		if ($photo) {
-			$login = User::getUserLogin($photo['user_id']);
-			// сделать обработку ошибок
-			if ($login) {
-				$photo['login'] = $login['login'];
-			}
-			//$this->debug($photo);
-			$pathView = $this->DIR_PATH . 'onephoto.php';
-			require_once $pathView;
+	public function getOnePhoto($photo_id)
+	{
+		if (isset($_POST['delete'])) {
+			//передавать ещё id пользователя, чтобы убедиться, что это его фото
+			$result = Photo::deletePhoto($_POST['photo_id']);
+			echo "Фото удалено";
 		} else {
-			self::ErrorPage404();
+			//сделать обработку, что фото не существует
+			$photo = Photo::getPhoto($photo_id);
+			if ($photo) {
+				$login = User::getUserLogin($photo['user_id']);
+				// сделать обработку ошибок
+				if ($login) {
+					$photo['login'] = $login['login'];
+				}
+				//$this->debug($photo);
+				$pathView = $this->DIR_PATH . 'onephoto.php';
+				require_once $pathView;
+			} else {
+				self::ErrorPage404();
+			}
 		}
+	}
+
+	public function newcomment() {
 
 	}
 }

@@ -5,7 +5,7 @@
 <h1 class="display-4"> Main </h1>
 
 <div id="gallery">
-	<?php foreach ($result as $value) {
+	<?php foreach ($result['photos'] as $value) {
 
 	    echo "<p><a href=\"\photo\\" . $value['id'] . "\">
                 <img src=\"" . $value['photo'] . "\" alt=\"Фото пользователя\" width=150px>
@@ -17,15 +17,25 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination">
         <?php
-        //если текущая страница больше трех, то показывать previous
-        //если текущая страница меньше на три чем общее кол-во страниц, то показывать next
-        //
+		if ($result['pageCount'] > 1 && $result['pageNumber'] > 1) {
+			$previous =  $result['pageNumber'] - 1;
+			echo "<li class=\"page-item\"><a class=\"page-link\" href=\"/?page=1\">The first</a></li>";
+		}
+        if ($result['pageCount'] > 1 && $result['pageNumber'] > 1) {
+            $previous =  $result['pageNumber'] - 1;
+            echo "<li class=\"page-item\"><a class=\"page-link\" href=\"/?page=" .
+                $previous . "\">Previous</a></li>";
+        }
+		if ($result['pageCount'] > 1 && $result['pageNumber'] < $result['pageCount']) {
+			$next =  $result['pageNumber'] + 1;
+			echo "<li class=\"page-item\"><a class=\"page-link\" href=\"/?page=" .
+				$next . "\">Next</a></li>";
+		}
+		if ($result['pageCount'] > 1 && $result['pageNumber'] !== $result['pageCount']) {
+			echo "<li class=\"page-item\"><a class=\"page-link\" href=\"/?page=" .
+				$result['pageCount'] . "\">The last</a></li>";
+		}
         ?>
-        <li class="page-item"><a class="page-link" href="">Previous</a></li>
-        <li class="page-item"><a class="page-link" href="/?page=1">1</a></li>
-        <li class="page-item"><a class="page-link" href="/?page=2">2</a></li>
-        <li class="page-item"><a class="page-link" href="/?page=3">3</a></li>
-        <li class="page-item"><a class="page-link" href="">Next</a></li>
     </ul>
 </nav>
 
