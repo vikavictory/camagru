@@ -14,8 +14,26 @@
         <input type="submit" name="delete" value="Delete"/>
     </form>
     <br>
-    <textarea id="comment" cols="40" rows="3"></textarea>
-    <input id="newComment" type="button" value="Send" />
+    <body onload="getComments();">
+    <p> Комментарии </p>
+    <script>
+        function getComments(count = 0) {
+            alert("here");
+    }
+    </script>
+
+    </body>
+
+
+    <br>
+    <form name="newcomment" method="post">
+        <input type="hidden" id="photo_id" value="<?php echo $photo['id'];?>"/>
+        <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id'];?>"/>
+        <span>Комментарий</span><br>
+        <textarea id="comment" cols="30" rows="10"></textarea><br>
+        <button id="commentButton">Отправить</button>
+    </form>
+    <script src="/public/js/newcomment.js"></script>
 <?php } ?>
 
 </body>

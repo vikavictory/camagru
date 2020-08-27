@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\Model;
 use app\models\Photo;
 use app\models\User;
+use app\models\Comment;
 
 class PhotoController extends Model
 {
@@ -83,6 +84,18 @@ class PhotoController extends Model
 	}
 
 	public function newcomment() {
+		//$this->debug($_POST);
+		//сделать проверку, что пользователь авторизованн
+		//текст комментария
+		//что существует фотография и пользователь
+		if (isset($_POST['comment'])) {
+			$result = Comment::createComment();
+		}
+	}
 
+	public function getcomments() {
+
+		$result = Comment::getComments(4);
+		echo json_encode($result);
 	}
 }
