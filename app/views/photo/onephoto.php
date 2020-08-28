@@ -23,8 +23,6 @@
     </script>
 
     </body>
-
-
     <br>
     <form name="newcomment" method="post">
         <input type="hidden" id="photo_id" value="<?php echo $photo['id'];?>"/>
