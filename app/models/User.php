@@ -265,6 +265,7 @@ class User extends Model
 			return $message;
 		}
 		$new_password = hash('whirlpool', $_POST['password']);
+
 		// проверка, что пароль не совпадает с предыдущим;
 		try {
 			$link = self::getDB();
@@ -281,6 +282,7 @@ class User extends Model
 		if ($new_password === $result['password']) {
 			return "Пароль совпадает с текущим";
 		}
+
 		//обновление пароля
 		try {
 			$sql = "UPDATE users SET password=:password WHERE id=:id";

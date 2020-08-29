@@ -5,12 +5,14 @@
 <h1 class="display-4"> Main </h1>
 
 <div id="gallery">
-	<?php foreach ($result['photos'] as $value) {
-
-	    echo "<p><a href=\"\photo\\" . $value['id'] . "\">
-                <img src=\"" . $value['photo'] . "\" alt=\"Фото пользователя\" width=150px>
-             </a></p>";
-
+	<?php if (isset($result["error"])) {
+	        echo $result["error"];
+	    } else {
+	        foreach ($result['photos'] as $value) {
+	            echo "<p><a href=\"\photo\\" . $value['id'] . "\">
+	            <img src=\"" . $value['photo'] . "\" alt=\"Фото пользователя\" width=150px>
+	            </a></p>";
+		}
 	} ?>
 </div>
 

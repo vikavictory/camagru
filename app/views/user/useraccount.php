@@ -15,6 +15,7 @@
         echo "<p> Name " . $user['name'] . "</p>";
         echo "<p> Surame " . $user['surname'] . "</p>";
         echo "<p> Email: " . $user['email'] . "</p>";
+
         if (isset($user['photos'])) {
             echo "<div id=\"gallery\">";
 			foreach ($user['photos'] as $value) {
@@ -24,6 +25,7 @@
 			}
 			echo "</div>";
         }
+
     } else {
         echo "<p> Доступ запрещен, пользователь не активирован </p>";
     } ?>

@@ -119,60 +119,65 @@ class Photo extends Model
 		return true;
 	}
 
-	public static function getAllGallery() {
-		// сделать, чтобы выдавало группами
-		// сделать нормальную обработку ошибок
-		try {
-			$link = self::getDB();
-			$sql = "SELECT id, photo FROM photos
-					ORDER BY created_at";
-			$sth = $link->prepare($sql);
-			$sth->execute();
-			$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-		} catch( PDOException $e) {
-			$error = $e->getMessage();
-		} catch( Exception $e) {
-			$error = $e->getMessage();
+//	public static function getAllGallery() {
+//		try {
+//			$link = self::getDB();
+//			$sql = "SELECT id, photo FROM photos
+//					ORDER BY created_at";
+//			$sth = $link->prepare($sql);
+//			$sth->execute();
+//			$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+//		} catch( PDOException $e) {
+//			$error = $e->getMessage();
+//		} catch( Exception $e) {
+//			$error = $e->getMessage();
+//		}
+//		if ($error) {
+//			return false;
+//		}
+//		return $result;
+//	}
+
+	private static function getStartingPhotoNumber($photoCount) {
+		$pageCount = ceil($photoCount / 5);
+		$from = 0;
+		if ($photoCount === 0) {
+			return ["error" => "В галерее пока нет фотографий"];
 		}
-		if ($error) {
-			return false;
+		if (isset($_GET['page'])) {
+			$pageNumber = $_GET['page'];
+			if (!ctype_digit($pageNumber)) {
+				return ["error" => "Неправильный запрос"];
+			}
+			if ($pageNumber >= 1 && $pageNumber <= $pageCount) {
+				$from += 5 * ($pageNumber - 1);
+				return [ "from" => $from,
+						"pageCount" => (int)$pageCount,
+						"pageNumber" => (int)$pageNumber];
+			}
+			else {
+				return ["error" => "Неправильный запрос"];
+			}
+		} else {
+			return [ "from" => 0,
+				"pageCount" => (int)$pageCount,
+				"pageNumber" => 1];
 		}
-		return $result;
 	}
 
 	public static function getGallery() {
 
-		//вынести обработку get_запроса и подавать в функцию номер страницы
-		//получить общее количество фото
-		//определить сколько всего страниц должно быть
 		$photoCount = self::getPhotoCount();
-		$pageCount = ceil($photoCount / 5);
-		$from = 0;
-
-		//получить get-запрос
-		//проверить, что число
-		//проверить, что входит в диапазон
-		//как обрабатывать первую страничку - ??????
-
-		if (isset($_GET['page'])) {
-			$pageNumber = $_GET['page'];
-			//обработать, что число
-			if ($pageNumber >= 1&& $pageNumber <= $pageCount) {
-				$from += 5 * ($pageNumber - 1);
-			}
-			else {
-				//подумать как нормально вернуть ошибки
-				return false;
-			}
+		$data = self::getStartingPhotoNumber($photoCount);
+		if (isset($data["error"])) {
+			return ["error" => $data["error"]];
 		}
-
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id, photo FROM photos
 					ORDER BY created_at
-					LIMIT " . $from . ", 5";
+					LIMIT " . $data["from"] . ", 5";
 			$sth = $link->prepare($sql);
-			$sth->bindParam(':from', $from);
 			$sth->execute();
 			$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
 		} catch( PDOException $e) {
@@ -181,17 +186,29 @@ class Photo extends Model
 			$error = $e->getMessage();
 		}
 		if ($error) {
-			return false;
+			return ["error" => "Произошла ошибка при подключение к БД"];
 		}
 		return ["photos" => $result,
-				"pageCount" => (int)$pageCount,
-				"pageNumber" => (int)$pageNumber];
+				"pageCount" => $data["pageCount"],
+				"pageNumber" => $data["pageNumber"]];
 	}
 
 	public static function getUserPhoto($user_id) {
+
+		//получить количество
+		//отправить на проверку гет_запрос
+		//сделать как в галерее выбор
+		$photoCount = self::getUserPhotoCount($user_id);
+		$data = self::getStartingPhotoNumber($photoCount);
+		if (isset($data["error"])) {
+			return ["error" => $data["error"]];
+		}
 		try {
 			$link = self::getDB();
-			$sql = "SELECT id, photo FROM photos WHERE user_id=:user_id";
+			$sql = "SELECT id, photo FROM photos
+					WHERE user_id=:user_id
+					ORDER BY created_at
+					LIMIT " . $data["from"] . ", 5";
 			$sth = $link->prepare($sql);
 			$sth->bindParam(':user_id', $user_id);
 			$sth->execute();
@@ -202,9 +219,32 @@ class Photo extends Model
 			$error = $e->getMessage();
 		}
 		if ($error) {
-			return false;
+			return ["error" => "Произошла ошибка при подключение к БД"];
 		}
 		return $result;
+		//return ["photos" => $result,
+		//	"pageCount" => $data["pageCount"],
+		//	"pageNumber" => $data["pageNumber"]];
+
+
+
+		//старый вариант
+//		try {
+//			$link = self::getDB();
+//			$sql = "SELECT id, photo FROM photos WHERE user_id=:user_id";
+//			$sth = $link->prepare($sql);
+//			$sth->bindParam(':user_id', $user_id);
+//			$sth->execute();
+//			$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+//		} catch( PDOException $e) {
+//			$error = $e->getMessage();
+//		} catch( Exception $e) {
+//			$error = $e->getMessage();
+//		}
+//		if ($error) {
+//			return false;
+//		}
+//		return $result;
 	}
 
 	public static function getPhoto($photo_id) {
@@ -232,6 +272,25 @@ class Photo extends Model
 			$link = self::getDB();
 			$sql = "SELECT id FROM photos";
 			$sth = $link->prepare($sql);
+			$sth->execute();
+			$result = $sth->rowCount(\PDO::FETCH_ASSOC);
+		} catch( PDOException $e) {
+			$error = $e->getMessage();
+		} catch( Exception $e) {
+			$error = $e->getMessage();
+		}
+		if ($error) {
+			return false;
+		}
+		return $result;
+	}
+
+	public static function getUserPhotoCount($user_id) {
+		try {
+			$link = self::getDB();
+			$sql = "SELECT id FROM photos WHERE user_id=:user_id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':user_id', $user_id);
 			$sth->execute();
 			$result = $sth->rowCount(\PDO::FETCH_ASSOC);
 		} catch( PDOException $e) {
