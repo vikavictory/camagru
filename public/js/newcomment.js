@@ -18,7 +18,7 @@ window.onload = function () {
         data = "user_id=" + encodeURIComponent(user_id) +
             "&photo_id=" + encodeURIComponent(photo_id) +
             "&comment=" + encodeURIComponent(comment);
-        alert(data);
+        //alert(data);
         xmlhttp.send(data);
     }
     button.addEventListener('click', newComment);

@@ -34,4 +34,12 @@ class Model
 		$result = mail($to, $subject, $message, $headers);
 		return $result;
 	}
+
+	protected static function debug($str)
+	{
+		echo '<pre>';
+		var_dump($str);
+		echo '</pre>';
+	}
+
 }

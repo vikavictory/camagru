@@ -43,11 +43,17 @@ class PhotoController extends Model
 	public function save()
 	{
 		if (isset($_POST['photo'])) {
-			$pathView = 'app/views/index.php';
-			require_once $pathView;
-			$this->debug($_POST);
+			//$pathView = 'app/views/index.php';
+			//require_once $pathView;
+			//$this->debug($_POST);
 			//$this->debug($_POST['photo']);
-			$result = Photo::saveToDB($_POST['photo'], $_SESSION['user_id']);
+			$result = Photo::PhotoValidation($_POST['photo']);
+			if (isset($result['error'])) {
+				//здесь нужно отправить ошибку через ajax
+				echo $result['error'];
+			} else {
+				$result = Photo::saveToDB($_POST['photo'], $_SESSION['user_id']);
+			}
 		}
 	}
 
@@ -64,7 +70,8 @@ class PhotoController extends Model
 		if (isset($_POST['delete'])) {
 			//передавать ещё id пользователя, чтобы убедиться, что это его фото
 			$result = Photo::deletePhoto($_POST['photo_id']);
-			echo "Фото удалено";
+			header('Location: /user/' . $_SESSION['user']);
+			//echo "Фото удалено";
 		} else {
 			//сделать обработку, что фото не существует
 			$photo = Photo::getPhoto($photo_id);
@@ -94,7 +101,6 @@ class PhotoController extends Model
 	}
 
 	public function getcomments() {
-
 		$result = Comment::getComments(4);
 		echo json_encode($result);
 	}

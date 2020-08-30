@@ -16,12 +16,6 @@
     <br>
     <body onload="getComments();">
     <p> Комментарии </p>
-    <script>
-        function getComments(count = 0) {
-            alert("here");
-    }
-    </script>
-
     </body>
     <br>
     <form name="newcomment" method="post">

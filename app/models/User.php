@@ -29,9 +29,9 @@ class User extends Model
 		if ($error) {
 			return false;
 		}
-		$userPhotos = Photo::getUserPhoto($result['id']);
+		$userPhotos = Photo::getUserPhotos($result['id']);
 		if ($userPhotos) {
-			$result['photos'] = $userPhotos;
+			$result['photodata'] = $userPhotos;
 		}
 		return $result;
 	}

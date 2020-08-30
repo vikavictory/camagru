@@ -20,7 +20,6 @@
     <ul class="pagination">
         <?php
 		if ($result['pageCount'] > 1 && $result['pageNumber'] > 1) {
-			$previous =  $result['pageNumber'] - 1;
 			echo "<li class=\"page-item\"><a class=\"page-link\" href=\"/?page=1\">The first</a></li>";
 		}
         if ($result['pageCount'] > 1 && $result['pageNumber'] > 1) {

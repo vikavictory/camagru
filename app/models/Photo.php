@@ -90,6 +90,7 @@ class Photo extends Model
 			}
 			$fi = finfo_open(FILEINFO_MIME_TYPE); // Создадим ресурс FileInfo
 			$mime = (string)finfo_file($fi, $fileTmpName); // Получим MIME-тип
+			Model::debug($mime);
 			if (strpos($mime, 'image') === false) {
 				return (['error' => "Можно загружать только изображения."]);
 			}
@@ -97,6 +98,15 @@ class Photo extends Model
 			//сделать определение формата картинки
 			$result = "data:image/png;base64," . base64_encode($data);
 			return (['photo' => $result]);
+		}
+	}
+
+	public static function PhotoValidation($photo) {
+		$size_info = getimagesizefromstring($photo);
+		if ($size_info) {
+			
+		} else {
+			return false;
 		}
 	}
 
@@ -193,8 +203,7 @@ class Photo extends Model
 				"pageNumber" => $data["pageNumber"]];
 	}
 
-	public static function getUserPhoto($user_id) {
-
+	public static function getUserPhotos($user_id) {
 		//получить количество
 		//отправить на проверку гет_запрос
 		//сделать как в галерее выбор
@@ -221,30 +230,9 @@ class Photo extends Model
 		if ($error) {
 			return ["error" => "Произошла ошибка при подключение к БД"];
 		}
-		return $result;
-		//return ["photos" => $result,
-		//	"pageCount" => $data["pageCount"],
-		//	"pageNumber" => $data["pageNumber"]];
-
-
-
-		//старый вариант
-//		try {
-//			$link = self::getDB();
-//			$sql = "SELECT id, photo FROM photos WHERE user_id=:user_id";
-//			$sth = $link->prepare($sql);
-//			$sth->bindParam(':user_id', $user_id);
-//			$sth->execute();
-//			$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-//		} catch( PDOException $e) {
-//			$error = $e->getMessage();
-//		} catch( Exception $e) {
-//			$error = $e->getMessage();
-//		}
-//		if ($error) {
-//			return false;
-//		}
-//		return $result;
+		return ["photos" => $result,
+				"pageCount" => $data["pageCount"],
+				"pageNumber" => $data["pageNumber"]];
 	}
 
 	public static function getPhoto($photo_id) {
@@ -264,7 +252,6 @@ class Photo extends Model
 			return false;
 		}
 		return $result;
-
 	}
 
 	public static function getPhotoCount() {
