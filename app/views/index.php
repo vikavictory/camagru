@@ -8,10 +8,18 @@
 	<?php if (isset($result["error"])) {
 	        echo $result["error"];
 	    } else {
+	        $index = 0;
 	        foreach ($result['photos'] as $value) {
-	            echo "<p><a href=\"\photo\\" . $value['id'] . "\">
-	            <img src=\"" . $value['photo'] . "\" alt=\"Фото пользователя\" width=150px>
-	            </a></p>";
+	            if ($index === 0 || $index === 3) {
+	                echo "<p>";
+                }
+	            echo "<a href=\"\photo\\" . $value['id'] . "\">
+	            <img src=\"" . $value['photo'] . "\" alt=\"Фото пользователя\" height=300px>
+	            </a>";
+				if ($index === 2 || $index === count($result['photos']) - 1) {
+					echo "</p>";
+				}
+				$index += 1;
 		}
 	} ?>
 </div>

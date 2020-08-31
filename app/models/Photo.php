@@ -5,70 +5,6 @@ use app\Model;
 
 class Photo extends Model
 {
-//	public static function loadPhoto($source) {
-//		if (isset($_FILES['image'])) {
-//			$image = $_FILES['image'];
-//			$fileTmpName = $image['tmp_name'];
-//			$errorCode = $image['error'];
-//			if ($errorCode !== UPLOAD_ERR_OK || !is_uploaded_file($fileTmpName)) {
-//				$errorMessages = [
-//					UPLOAD_ERR_INI_SIZE => 'Размер файла превысил значение upload_max_filesize в конфигурации PHP.',
-//					UPLOAD_ERR_FORM_SIZE => 'Размер загружаемого файла превысил значение MAX_FILE_SIZE в HTML-форме.',
-//					UPLOAD_ERR_PARTIAL => 'Загружаемый файл был получен только частично.',
-//					UPLOAD_ERR_NO_FILE => 'Файл не был загружен.',
-//					UPLOAD_ERR_NO_TMP_DIR => 'Отсутствует временная папка.',
-//					UPLOAD_ERR_CANT_WRITE => 'Не удалось записать файл на диск.',
-//					UPLOAD_ERR_EXTENSION => 'PHP-расширение остановило загрузку файла.',
-//				];
-//				$unknownMessage = 'При загрузке файла произошла неизвестная ошибка.';
-//				$outputMessage = isset($errorMessages[$errorCode]) ? $errorMessages[$errorCode] : $unknownMessage;
-//				return (['error' => $outputMessage]);
-//			}
-//
-//			$fi = finfo_open(FILEINFO_MIME_TYPE); // Создадим ресурс FileInfo
-//			$mime = (string)finfo_file($fi, $fileTmpName); // Получим MIME-тип
-//			if (strpos($mime, 'image') === false) {
-//				return (['error' => "Можно загружать только изображения."]);
-//			}
-//			$image = getimagesize($fileTmpName);
-//			$name = md5_file($fileTmpName);
-//			$extension = image_type_to_extension($image[2]); // Сгенерируем расширение файла на основе типа картинки
-//			if (!move_uploaded_file($fileTmpName, ROOT . $source . $name . $extension)) {
-//				return (['error' =>'При записи изображения на диск произошла ошибка.']);
-//			}
-//			return (['photoName' => $name . $extension] );
-//		}
-//	}
-//
-//	public static function savePhoto($source) {
-//		if (isset($_FILES['image'])) {
-//			$image = $_FILES['image'];
-//			$fileTmpName = $image['tmp_name'];
-//			$errorCode = $image['error'];
-//			if ($errorCode !== UPLOAD_ERR_OK || !is_uploaded_file($fileTmpName)) {
-//				$errorMessages = [
-//					UPLOAD_ERR_INI_SIZE => 'Размер файла превысил значение upload_max_filesize в конфигурации PHP.',
-//					UPLOAD_ERR_FORM_SIZE => 'Размер загружаемого файла превысил значение MAX_FILE_SIZE в HTML-форме.',
-//					UPLOAD_ERR_PARTIAL => 'Загружаемый файл был получен только частично.',
-//					UPLOAD_ERR_NO_FILE => 'Файл не был загружен.',
-//					UPLOAD_ERR_NO_TMP_DIR => 'Отсутствует временная папка.',
-//					UPLOAD_ERR_CANT_WRITE => 'Не удалось записать файл на диск.',
-//					UPLOAD_ERR_EXTENSION => 'PHP-расширение остановило загрузку файла.',
-//				];
-//				$unknownMessage = 'При загрузке файла произошла неизвестная ошибка.';
-//				$outputMessage = isset($errorMessages[$errorCode]) ? $errorMessages[$errorCode] : $unknownMessage;
-//				return (['error' => $outputMessage]);
-//			}
-//			$fi = finfo_open(FILEINFO_MIME_TYPE); // Создадим ресурс FileInfo
-//			$mime = (string)finfo_file($fi, $fileTmpName); // Получим MIME-тип
-//			if (strpos($mime, 'image') === false) {
-//				return (['error' => "Можно загружать только изображения."]);
-//			}
-//			$data = file_get_contents($fileTmpName);
-//			return (['photoName' => $data]);
-//		}
-//	}
-
 	public static function getBase64() {
 		if (isset($_FILES['image'])) {
 			$image = $_FILES['image'];
@@ -102,11 +38,11 @@ class Photo extends Model
 	}
 
 	public static function PhotoValidation($photo) {
-		$size_info = getimagesizefromstring($photo);
+		$size_info = getimagesize($photo);
 		if ($size_info) {
-			
+			return $size_info;
 		} else {
-			return false;
+			return ["error" => "Некорректный файл"];
 		}
 	}
 
@@ -129,27 +65,8 @@ class Photo extends Model
 		return true;
 	}
 
-//	public static function getAllGallery() {
-//		try {
-//			$link = self::getDB();
-//			$sql = "SELECT id, photo FROM photos
-//					ORDER BY created_at";
-//			$sth = $link->prepare($sql);
-//			$sth->execute();
-//			$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-//		} catch( PDOException $e) {
-//			$error = $e->getMessage();
-//		} catch( Exception $e) {
-//			$error = $e->getMessage();
-//		}
-//		if ($error) {
-//			return false;
-//		}
-//		return $result;
-//	}
-
 	private static function getStartingPhotoNumber($photoCount) {
-		$pageCount = ceil($photoCount / 5);
+		$pageCount = ceil($photoCount / 6);
 		$from = 0;
 		if ($photoCount === 0) {
 			return ["error" => "В галерее пока нет фотографий"];
@@ -176,7 +93,6 @@ class Photo extends Model
 	}
 
 	public static function getGallery() {
-
 		$photoCount = self::getPhotoCount();
 		$data = self::getStartingPhotoNumber($photoCount);
 		if (isset($data["error"])) {
@@ -186,7 +102,7 @@ class Photo extends Model
 			$link = self::getDB();
 			$sql = "SELECT id, photo FROM photos
 					ORDER BY created_at
-					LIMIT " . $data["from"] . ", 5";
+					LIMIT " . $data["from"] . ", 6";
 			$sth = $link->prepare($sql);
 			$sth->execute();
 			$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
@@ -204,9 +120,6 @@ class Photo extends Model
 	}
 
 	public static function getUserPhotos($user_id) {
-		//получить количество
-		//отправить на проверку гет_запрос
-		//сделать как в галерее выбор
 		$photoCount = self::getUserPhotoCount($user_id);
 		$data = self::getStartingPhotoNumber($photoCount);
 		if (isset($data["error"])) {
@@ -217,7 +130,7 @@ class Photo extends Model
 			$sql = "SELECT id, photo FROM photos
 					WHERE user_id=:user_id
 					ORDER BY created_at
-					LIMIT " . $data["from"] . ", 5";
+					LIMIT " . $data["from"] . ", 6";
 			$sth = $link->prepare($sql);
 			$sth->bindParam(':user_id', $user_id);
 			$sth->execute();
@@ -291,7 +204,10 @@ class Photo extends Model
 		return $result;
 	}
 
-	public static function deletePhoto($photo_id) {
+	public static function deletePhoto($photo_id, $user_id) {
+		if ($_SESSION['user_id'] !== $user_id) {
+			return false;
+		}
 		try {
 			$link = self::getDB();
 			$sql = "DELETE FROM photos WHERE id=:id";
@@ -306,7 +222,7 @@ class Photo extends Model
 		if ($error) {
 			return false;
 		}
-		return false;
+		return true;
 	}
 
 }

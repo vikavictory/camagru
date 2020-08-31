@@ -10,13 +10,6 @@ class UserController extends Router
 {
 	private $DIR_PATH = 'app/views/user/';
 
-	function debug($str)
-	{
-		echo '<pre>';
-		var_dump($str);
-		echo '</pre>';
-	}
-
 	public function registration() //+
 	{
 		if (isset($_POST['submit'])) {

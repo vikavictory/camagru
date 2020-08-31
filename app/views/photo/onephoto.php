@@ -8,11 +8,13 @@
     <p> Description <?php echo $photo['description'];?> </p>
     <p> Created at  <?php echo $photo['created_at'];?> </p>
     <img src="<?php echo $photo['photo'];?>" alt="Фото пользователя" width=300px>
-    <form name="registration" method="post" action="">
-        <input type="hidden" name="photo_id" value="<?php echo $photo['id'];?>"/>
-        <input type="hidden" name="user_id" value="<?php echo $photo['user_id'];?>"/>
-        <input type="submit" name="delete" value="Delete"/>
-    </form>
+    <?php if ($_SESSION["user_id"] === $photo['user_id']) { ?>
+        <form name="delete" method="post" action="">
+            <input type="hidden" name="photo_id" value="<?php echo $photo['id'];?>"/>
+            <input type="hidden" name="user_id" value="<?php echo $photo['user_id'];?>"/>
+            <input type="submit" name="delete" value="Delete"/>
+        </form>
+    <?php } ?>
     <br>
     <body onload="getComments();">
     <p> Комментарии </p>

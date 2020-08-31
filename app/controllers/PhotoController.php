@@ -11,13 +11,6 @@ class PhotoController extends Model
 {
 	private $DIR_PATH = 'app/views/photo/';
 
-	function debug($str)
-	{
-		echo '<pre>';
-		var_dump($str);
-		echo '</pre>';
-	}
-
 	public function gallery()
 	{
 		$result = Photo::getGallery();
@@ -43,13 +36,12 @@ class PhotoController extends Model
 	public function save()
 	{
 		if (isset($_POST['photo'])) {
-			//$pathView = 'app/views/index.php';
-			//require_once $pathView;
 			//$this->debug($_POST);
 			//$this->debug($_POST['photo']);
 			$result = Photo::PhotoValidation($_POST['photo']);
+			self::debug($result);
 			if (isset($result['error'])) {
-				//здесь нужно отправить ошибку через ajax
+				//здесь нужно отправить ошибку через ajax - как??
 				echo $result['error'];
 			} else {
 				$result = Photo::saveToDB($_POST['photo'], $_SESSION['user_id']);
@@ -59,19 +51,17 @@ class PhotoController extends Model
 
 	public function preview()
 	{
-		$this->debug($_SESSION);
-		$this->debug($_POST);
 		$pathView = 'app/views/photo/save.php';
 		require_once $pathView;
 	}
 
 	public function getOnePhoto($photo_id)
 	{
-		if (isset($_POST['delete'])) {
-			//передавать ещё id пользователя, чтобы убедиться, что это его фото
-			$result = Photo::deletePhoto($_POST['photo_id']);
-			header('Location: /user/' . $_SESSION['user']);
-			//echo "Фото удалено";
+		if (isset($_POST['delete']) && isset($_POST['photo_id']) && isset($_POST['user_id'])) {
+			$result = Photo::deletePhoto($_POST['photo_id'], $_POST['user_id']);
+			if ($result) {
+				header('Location: /user/' . $_SESSION['user']);
+			}
 		} else {
 			//сделать обработку, что фото не существует
 			$photo = Photo::getPhoto($photo_id);
@@ -81,7 +71,6 @@ class PhotoController extends Model
 				if ($login) {
 					$photo['login'] = $login['login'];
 				}
-				//$this->debug($photo);
 				$pathView = $this->DIR_PATH . 'onephoto.php';
 				require_once $pathView;
 			} else {
@@ -91,7 +80,6 @@ class PhotoController extends Model
 	}
 
 	public function newcomment() {
-		//$this->debug($_POST);
 		//сделать проверку, что пользователь авторизованн
 		//текст комментария
 		//что существует фотография и пользователь
