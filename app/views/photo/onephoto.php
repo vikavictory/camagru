@@ -16,19 +16,22 @@
         </form>
     <?php } ?>
     <br>
-    <body onload="getComments();">
-    <p> Комментарии </p>
-    </body>
+    <script src="/public/js/getcomments.js"></script>
+    <div class="here">
+    </div>
+
     <br>
-    <form name="newcomment" method="post">
-        <input type="hidden" id="photo_id" value="<?php echo $photo['id'];?>"/>
-        <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id'];?>"/>
-        <span>Комментарий</span><br>
-        <textarea id="comment" cols="30" rows="10"></textarea><br>
-        <button id="commentButton">Отправить</button>
-    </form>
-    <script src="/public/js/newcomment.js"></script>
-<?php } ?>
+    <?php if (isset($_SESSION["user"]) && isset($_SESSION["user_id"]) &&
+		$_SESSION["user"] !== "" && $_SESSION["user_id"] !== "") { ?>
+        <form name="newcomment" method="post">
+            <input type="hidden" id="photo_id" value="<?php echo $photo['id'];?>"/>
+            <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id'];?>"/>
+            <span>Комментарий</span><br>
+            <textarea id="comment" cols="30" rows="10"></textarea><br>
+            <button id="commentButton">Отправить</button>
+        </form>
+        <script src="/public/js/newcomment.js"></script>
+    <?php } } ?>
 
 </body>
 </html>

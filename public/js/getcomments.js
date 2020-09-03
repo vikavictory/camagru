@@ -11,14 +11,15 @@ function getComments(count = 0) {
                 var data = xmlhttp.responseText;
                 if(data) {
                     data = JSON.parse(data);
+                    console.log(data);
                     for(var i = 0; i < data.length; i++) {
-                        var parent = document.getElementsByTagName('body')[0];
+                        var parent = document.getElementsByClassName('here')[0];
                         var elem = document.createElement('div');
                         elem.className = 'comments';
                         parent = parent.appendChild(elem);
                         elem = document.createElement('span');
                         parent.appendChild(elem);
-                        var text = data[i].name;
+                        var text = data[i].created_at;
                         var textNode = document.createTextNode(text);
                         elem.appendChild(textNode);
                         elem = document.createElement('hr');
@@ -26,7 +27,7 @@ function getComments(count = 0) {
                         elem = document.createElement('div');
                         elem.className = 'comment';
                         parent.appendChild(elem);
-                        text = data[i].comment;
+                        text = data[i].comment_text;
                         textNode = document.createTextNode(text);
                         elem.appendChild(textNode);
                         var max = data[i].id;
@@ -36,7 +37,7 @@ function getComments(count = 0) {
             }
         }
     };
-    setTimeout(function() {
-        getComments(count);
-    }, 3000);
+
 }
+
+window.addEventListener("load", getComments);

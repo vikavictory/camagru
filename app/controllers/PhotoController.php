@@ -20,7 +20,9 @@ class PhotoController extends Model
 
 	public function photo()
 	{
-		if (isset($_FILES['image'])) {
+		self::debug($_POST);
+		self::debug($_FILES);
+		if (isset($_FILES['image']) && $_POST['submit'] === "Download") {
 			$result = Photo::getBase64();
 			if (isset($result['error'])) {
 				echo $result['error'];
@@ -85,11 +87,13 @@ class PhotoController extends Model
 		//что существует фотография и пользователь
 		if (isset($_POST['comment'])) {
 			$result = Comment::createComment();
+			echo "OK";
 		}
 	}
 
 	public function getcomments() {
-		$result = Comment::getComments(4);
+		$result = Comment::getComments(21);
+		//self::debug($result);
 		echo json_encode($result);
 	}
 

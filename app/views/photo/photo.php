@@ -23,7 +23,7 @@
 
 <form action="" method="post" enctype="multipart/form-data">
 	<input type="file" name="image">
-	<button type="submit">Загрузить</button>
+	<input type="submit" name="submit" value="Download">
 </form>
 </body>
 </html>
