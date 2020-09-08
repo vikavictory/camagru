@@ -12,9 +12,6 @@ class Comment extends Model
 			$photo_id = $_POST['photo_id'];
 			$user_id = $_POST['user_id'];
 			$comment_text = $_POST['comment'];
-			//$photo_id = 4;
-			//$user_id = 1;
-			//$comment_text = "hello";
 			$link = self::getDB();
 			$sql = "INSERT INTO comments (photo_id, user_id, comment_text, created_at)
 			VALUES (:photo_id, :user_id, :comment_text, :created_at)";
@@ -35,7 +32,10 @@ class Comment extends Model
 	public static function getComments($photo_id) {
 		try {
 			$link = self::getDB();
-			$sql = "SELECT * FROM comments WHERE photo_id=:photo_id";
+			$sql = "SELECT photo_id, user_id, comment_text, comments.created_at, users.login FROM comments 
+					INNER JOIN users ON comments.user_id = users.id
+					WHERE photo_id=:photo_id
+					ORDER BY comments.created_at";
 			$sth = $link->prepare($sql);
 			$sth->bindParam(':photo_id', $photo_id);
 			$sth->execute();
@@ -49,6 +49,26 @@ class Comment extends Model
 			return false;
 		}
 		return $result;
+	}
+
+
+	public static function deleteComment($comment_id) {
+//		try {
+//			$link = self::getDB();
+//			$sql = "SELECT * FROM comments WHERE photo_id=:photo_id";
+//			$sth = $link->prepare($sql);
+//			$sth->bindParam(':photo_id', $photo_id);
+//			$sth->execute();
+//			$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+//		} catch( PDOException $e) {
+//			$error = $e->getMessage();
+//		} catch( Exception $e) {
+//			$error = $e->getMessage();
+//		}
+//		if ($error) {
+//			return false;
+//		}
+//		return $result;
 	}
 
 }

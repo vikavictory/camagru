@@ -6,6 +6,7 @@ use app\Model;
 use app\models\Photo;
 use app\models\User;
 use app\models\Comment;
+use app\models\Like;
 
 class PhotoController extends Model
 {
@@ -92,9 +93,45 @@ class PhotoController extends Model
 	}
 
 	public function getcomments() {
-		$result = Comment::getComments(21);
-		//self::debug($result);
-		echo json_encode($result);
+		if (isset($_POST['photo_id'])) {
+			//проверить есть ли вообще такое фото
+			$photo_id = $_POST['photo_id'];
+			$result = Comment::getComments($photo_id);
+			//self::debug($result);
+			echo json_encode($result);
+		}
+	}
+
+	public function getlikes() {
+		if (isset($_POST['photo_id'])) {
+			//проверить есть ли вообще такое фото
+			$photo_id = $_POST['photo_id'];
+			$result = Like::getLikesCount($photo_id);
+			if (isset($_SESSION["user"]) && isset($_SESSION["user_id"])) {
+				$result["usersLike"] = Like::checkIfLikeIs($photo_id, $_SESSION["user_id"]);
+			} else {
+				$result["usersLike"] = false;
+			}
+			echo json_encode($result);
+		}
+	}
+
+	public function changelike() {
+		if (isset($_SESSION["user"]) && isset($_SESSION["user_id"])) {
+			if (isset($_POST['photo_id']) && isset($_POST['user_id'])) {
+				//проверить есть ли вообще такое фото и пользователь;
+				$photo_id = $_POST['photo_id'];
+				$user_id = $_POST['user_id'];
+				$result = Like::checkIfLikeIs($photo_id, $user_id);
+				if ($result === true) {
+					Like::deleteLike($photo_id, $user_id);
+					echo "delete";
+				} else {
+					Like::newLike($photo_id, $user_id);
+					echo "new";
+				}
+			}
+		}
 	}
 
 	private function ErrorPage404()

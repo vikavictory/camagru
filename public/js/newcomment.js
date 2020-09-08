@@ -1,5 +1,4 @@
 window.onload = function () {
-    //var comment = document.getElementById('comment');
     var button = document.getElementById('commentButton');
     var xmlhttp = new XMLHttpRequest();
     var data;
@@ -29,6 +28,33 @@ window.onload = function () {
                 console.log(xmlhttp.response);
             }
         }
+        document.newcomment.reset();
+        getComments();
     }
     button.addEventListener('click', newComment);
+
+    var button2 = document.getElementById('likeButton');
+    var changeLike = function () {
+        // event.preventDefault();
+        //console.log('event:', event);
+        var user_id = document.getElementById('user_id').value;
+        var photo_id = document.getElementById('photo_id').value;
+        xmlhttp.open('POST', '/changelike', true);
+        xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        data = "user_id=" + encodeURIComponent(user_id) +
+            "&photo_id=" + encodeURIComponent(photo_id);
+        xmlhttp.send(data);
+        xmlhttp.onload = () => {
+            if (xmlhttp.status != 200) {
+                console.log("аааашибка!");
+            } else {
+                console.log(xmlhttp.response);
+            }
+        }
+        console.log("here");
+        getLikes();
+    }
+
+    button2.addEventListener('click', changeLike);
+    //button2.addEventListener('click', checkLike);
 };

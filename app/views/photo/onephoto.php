@@ -8,6 +8,19 @@
     <p> Description <?php echo $photo['description'];?> </p>
     <p> Created at  <?php echo $photo['created_at'];?> </p>
     <img src="<?php echo $photo['photo'];?>" alt="Фото пользователя" width=300px>
+    <br>
+    <br>
+    <script src="/public/js/getlikes.js"></script>
+    <div class="likes">
+        <button id="likeButton">
+            <svg id="like" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+            </svg>
+            <span id="likesCount"></span>
+        </button>
+    </div>
+    <br>
+    <br>
     <?php if ($_SESSION["user_id"] === $photo['user_id']) { ?>
         <form name="delete" method="post" action="">
             <input type="hidden" name="photo_id" value="<?php echo $photo['id'];?>"/>
@@ -19,7 +32,6 @@
     <script src="/public/js/getcomments.js"></script>
     <div class="here">
     </div>
-
     <br>
     <?php if (isset($_SESSION["user"]) && isset($_SESSION["user_id"]) &&
 		$_SESSION["user"] !== "" && $_SESSION["user_id"] !== "") { ?>
@@ -32,6 +44,5 @@
         </form>
         <script src="/public/js/newcomment.js"></script>
     <?php } } ?>
-
 </body>
 </html>

@@ -22,14 +22,19 @@ function getComments(count = 0) {
                         var text = data[i].created_at;
                         var textNode = document.createTextNode(text);
                         elem.appendChild(textNode);
-                        elem = document.createElement('hr');
+                        elem = document.createElement('p');
                         parent.appendChild(elem);
+                        text = data[i].login;
+                        textNode = document.createTextNode(text);
+                        elem.appendChild(textNode);
                         elem = document.createElement('div');
                         elem.className = 'comment';
                         parent.appendChild(elem);
                         text = data[i].comment_text;
                         textNode = document.createTextNode(text);
                         elem.appendChild(textNode);
+                        elem = document.createElement('hr');
+                        parent.appendChild(elem);
                         var max = data[i].id;
                     }
                     count = max;

@@ -9,7 +9,9 @@ Class Router extends Model
 {
 	private $USER_ACTIONS = ['registration', 'activate', 'login', 'logout',
 		'settings', 'user', 'token', 'recovery', 'changepassword'];
-	private $PHOTO_ACTIONS = ['', 'photo', 'save', 'try', 'preview', 'newcomment', 'getcomments'];
+	private $PHOTO_ACTIONS = ['', 'photo', 'save', 'try', 'preview',
+								'newcomment', 'getcomments',
+								'getlikes', 'changelike'];
 
 	protected function getUri()
 	{
