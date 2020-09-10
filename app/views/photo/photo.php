@@ -25,5 +25,6 @@
 	<input type="file" name="image">
 	<input type="submit" name="submit" value="Download">
 </form>
+<?php require_once "app/views/footer.php" ?>
 </body>
 </html>

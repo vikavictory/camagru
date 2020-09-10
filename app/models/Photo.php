@@ -100,8 +100,9 @@ class Photo extends Model
 		}
 		try {
 			$link = self::getDB();
-			$sql = "SELECT id, photo FROM photos
-					ORDER BY created_at
+			$sql = "SELECT photos.id, photos.photo, users.login FROM photos
+    				INNER JOIN users ON photos.user_id = users.id
+					ORDER BY photos.created_at
 					LIMIT " . $data["from"] . ", 6";
 			$sth = $link->prepare($sql);
 			$sth->execute();

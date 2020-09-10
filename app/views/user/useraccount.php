@@ -60,4 +60,5 @@
         <p> Доступ запрещен, пользователь не активирован </p>
     <?php } ?>
 </body>
+<?php require_once "app/views/footer.php" ?>
 </html>

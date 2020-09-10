@@ -90,4 +90,36 @@ class Like extends Model
 		return true;
 	}
 
+	public static function checkDataForLikesChanging() {
+		if (!isset($_SESSION["user"]) && !isset($_SESSION["user_id"])) {
+			return ["result" => false, "message" => "Пользователь не авторизирован"];
+		}
+		if (!isset($_POST["photo_id"]) || $_POST["photo_id"] === "") {
+			return ["result" => false, "message" => "В запросе отсутствует id-фотографии"];
+		}
+		if (!isset($_POST["user_id"]) || $_POST["user_id"] === "") {
+			return ["result" => false, "message" => "В запросе отсутствует id-пользователя"];
+		}
+		if ($_SESSION["user_id"] !== $_POST["user_id"]) {
+			return ["result" => false, "message" => "Пользователь не соответствует авторизированному пользователю"];
+		}
+		if (!(Photo::getPhoto($_POST["photo_id"]))) {
+			return ["result" => false, "message" => "Фото не найдено"];
+		}
+		if (!(User::getUserLogin($_POST["user_id"]))) {
+			return ["result" => false, "message" => "Пользователь не найден"];
+		}
+		return ["result" => true];
+	}
+
+	public static function checkDataForLikesCount() {
+		if (!isset($_POST["photo_id"]) || $_POST["photo_id"] === "") {
+			return ["result" => false, "message" => "В запросе отсутствует id-фотографии"];
+		}
+		if (!(Photo::getPhoto($_POST["photo_id"]))) {
+			return ["result" => false, "message" => "Фото не найдено"];
+		}
+		return ["result" => true];
+	}
+
 }

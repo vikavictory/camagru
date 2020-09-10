@@ -9,6 +9,6 @@ if ($message !== "") {
 	$message = "";
 }
 ?>
-
+<?php require_once "app/views/footer.php" ?>
 </body>
 </html>

@@ -28,6 +28,7 @@ if ($message !== "") {
 		<br><h6>If you don't have an account: <a href="registration">Sign Up</a></h6>
 	</form>
 </div>
+<?php require_once "app/views/footer.php" ?>
 </body>
 </html>
 

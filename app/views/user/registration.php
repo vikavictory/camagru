@@ -50,5 +50,6 @@ if ($message !== "") {
 		<br><h6>Already have an account? <a href="/login">Sign In</a></h6>
 	</form>
 </div>
+<?php require_once "app/views/footer.php" ?>
 </body>
 </html>

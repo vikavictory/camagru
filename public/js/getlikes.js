@@ -20,7 +20,6 @@ function getLikes() {
                     } else {
                         element.style.color = "black";
                     }
-                    console.log(parent.hasChildNodes())
                 }
             }
         }

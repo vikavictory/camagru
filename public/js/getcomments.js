@@ -1,4 +1,6 @@
-function getComments(count = 0) {
+function getComments() {
+    //document.getElementById('comments').innerHTML = "";
+    document
     var xmlhttp = new XMLHttpRequest();
     var photo_id = document.getElementById('photo_id').value;
     console.log(photo_id);
@@ -8,21 +10,27 @@ function getComments(count = 0) {
     xmlhttp.onreadystatechange = function() {
         if(xmlhttp.readyState == 4) {
             if(xmlhttp.status == 200) {
+
                 var data = xmlhttp.responseText;
                 if(data) {
                     data = JSON.parse(data);
-                    console.log(data);
-                    for(var i = 0; i < data.length; i++) {
+                    var i = 0;
+                    var childrensLength = document.getElementById('here2').children.length;
+                    var dataLength = data.length;
+                    if (childrensLength > 0) {
+                        i = dataLength - 1;
+                    }
+                    while( i < dataLength) {
                         var parent = document.getElementsByClassName('here')[0];
                         var elem = document.createElement('div');
                         elem.className = 'comments';
                         parent = parent.appendChild(elem);
                         elem = document.createElement('span');
                         parent.appendChild(elem);
-                        var text = data[i].created_at;
+                        var text = data[i].created_at + " ";
                         var textNode = document.createTextNode(text);
                         elem.appendChild(textNode);
-                        elem = document.createElement('p');
+                        elem = document.createElement('span');
                         parent.appendChild(elem);
                         text = data[i].login;
                         textNode = document.createTextNode(text);
@@ -35,9 +43,8 @@ function getComments(count = 0) {
                         elem.appendChild(textNode);
                         elem = document.createElement('hr');
                         parent.appendChild(elem);
-                        var max = data[i].id;
+                        i++;
                     }
-                    count = max;
                 }
             }
         }

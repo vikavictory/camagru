@@ -52,7 +52,6 @@ class User extends Model
 		if ($error) {
 			return false;
 		}
-
 		return $result;
 	}
 

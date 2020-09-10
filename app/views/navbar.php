@@ -31,12 +31,10 @@
 			    <li class="nav-item">
 				    <a class="nav-link" href="/registration">Registration</a>
 			    </li>
-
 			    <li class="nav-item">
 				    <a class="nav-link" href="/login">Login</a>
 			    </li>
-
-			    <li class="nav-item">
+                <li class="nav-item">
 				    <a class="nav-link" href="/recovery">Reset password</a>
 			    </li>
 			<?php } ?>

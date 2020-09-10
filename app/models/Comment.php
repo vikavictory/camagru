@@ -3,6 +3,8 @@
 namespace app\models;
 
 use app\Model;
+use app\models\User;
+use app\models\Photo;
 
 class Comment extends Model
 {
@@ -49,6 +51,41 @@ class Comment extends Model
 			return false;
 		}
 		return $result;
+	}
+
+	public static function checkDataForNewComment() {
+		if (!isset($_SESSION["user"]) && !isset($_SESSION["user_id"])) {
+			return ["result" => false, "message" => "Пользователь не авторизирован"];
+		}
+		if (!isset($_POST["comment"]) || $_POST["comment"] === "") {
+			return ["result" => false, "message" => "Отсутствует текст комментария"];
+		}
+		if (!isset($_POST["photo_id"]) || $_POST["photo_id"] === "") {
+			return ["result" => false, "message" => "В запросе отсутствует id-фотографии"];
+		}
+		if (!isset($_POST["user_id"]) || $_POST["user_id"] === "") {
+			return ["result" => false, "message" => "В запросе отсутствует id-пользователя"];
+		}
+		if ($_SESSION["user_id"] !== $_POST["user_id"]) {
+			return ["result" => false, "message" => "Пользователь не соответствует авторизированному пользователю"];
+		}
+		if (!(Photo::getPhoto($_POST["photo_id"]))) {
+			return ["result" => false, "message" => "Фото не найдено"];
+		}
+		if (!(User::getUserLogin($_POST["user_id"]))) {
+			return ["result" => false, "message" => "Пользователь не найден"];
+		}
+		return ["result" => true];
+	}
+
+	public static function checkDataForGetComments() {
+		if (!isset($_POST["photo_id"]) || $_POST["photo_id"] === "") {
+			return ["result" => false, "message" => "В запросе отсутствует id-фотографии"];
+		}
+		if (!(Photo::getPhoto($_POST["photo_id"]))) {
+			return ["result" => false, "message" => "Фото не найдено"];
+		}
+		return ["result" => true];
 	}
 
 

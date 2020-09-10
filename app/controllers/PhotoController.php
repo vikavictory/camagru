@@ -15,6 +15,7 @@ class PhotoController extends Model
 	public function gallery()
 	{
 		$result = Photo::getGallery();
+		//self::debug($result);
 		$pathView = 'app/views/index.php';
 		require_once $pathView;
 	}
@@ -83,29 +84,36 @@ class PhotoController extends Model
 	}
 
 	public function newcomment() {
-		//сделать проверку, что пользователь авторизованн
-		//текст комментария
-		//что существует фотография и пользователь
-		if (isset($_POST['comment'])) {
+		$check = Comment::checkDataForNewComment();
+		if ($check["result"] === false){
+			echo json_encode($check);
+		} else {
 			$result = Comment::createComment();
-			echo "OK";
+			if ($result) {
+				echo json_encode(["result" => true, "message" => "Комментарий успешно добавлен"]);
+			} else {
+				echo json_encode(["result" => false, "message" => "Не удалось добавить комментарий"]);
+			}
 		}
 	}
 
 	public function getcomments() {
-		if (isset($_POST['photo_id'])) {
-			//проверить есть ли вообще такое фото
-			$photo_id = $_POST['photo_id'];
+		$check = Comment::checkDataForGetComments();
+		$photo_id = $_POST['photo_id'];
+		if ($check["result"] === false){
+			echo json_encode($check);
+		} else {
 			$result = Comment::getComments($photo_id);
-			//self::debug($result);
 			echo json_encode($result);
 		}
 	}
 
 	public function getlikes() {
-		if (isset($_POST['photo_id'])) {
-			//проверить есть ли вообще такое фото
-			$photo_id = $_POST['photo_id'];
+		$check = Like::checkDataForLikesCount();
+		$photo_id = $_POST['photo_id'];
+		if ($check["result"] === false){
+			echo json_encode($check);
+		} else {
 			$result = Like::getLikesCount($photo_id);
 			if (isset($_SESSION["user"]) && isset($_SESSION["user_id"])) {
 				$result["usersLike"] = Like::checkIfLikeIs($photo_id, $_SESSION["user_id"]);
@@ -117,20 +125,21 @@ class PhotoController extends Model
 	}
 
 	public function changelike() {
-		if (isset($_SESSION["user"]) && isset($_SESSION["user_id"])) {
-			if (isset($_POST['photo_id']) && isset($_POST['user_id'])) {
-				//проверить есть ли вообще такое фото и пользователь;
-				$photo_id = $_POST['photo_id'];
-				$user_id = $_POST['user_id'];
-				$result = Like::checkIfLikeIs($photo_id, $user_id);
-				if ($result === true) {
-					Like::deleteLike($photo_id, $user_id);
-					echo "delete";
-				} else {
-					Like::newLike($photo_id, $user_id);
-					echo "new";
-				}
+		$check = Like::checkDataForLikesChanging();
+		if ($check["result"] === false){
+			echo json_encode($check);
+		} else {
+			$photo_id = $_POST['photo_id'];
+			$user_id = $_POST['user_id'];
+			$result = Like::checkIfLikeIs($photo_id, $user_id);
+			if ($result === true) {
+				Like::deleteLike($photo_id, $user_id);
+				$result = ["message" => "Лайк удален"];
+			} else {
+				Like::newLike($photo_id, $user_id);
+				$result = ["message" => "Лайк добавлен"];
 			}
+			echo json_encode($result);
 		}
 	}
 
