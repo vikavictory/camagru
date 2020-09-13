@@ -139,6 +139,8 @@ class User extends Model
 			if ($result['activated'] === '1') {
 				$_SESSION['user'] = $_POST['login'];
 				$_SESSION['user_id'] = $result['id'];
+				setcookie('user', $_POST['login']);
+				setcookie('user_id', $result['id']);
 				return true;
 			} else {
 				return "Аккаунт не активирован";

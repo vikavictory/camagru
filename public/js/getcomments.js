@@ -41,6 +41,12 @@ function getComments() {
                         text = data[i].comment_text;
                         textNode = document.createTextNode(text);
                         elem.appendChild(textNode);
+
+                        elem = document.createElement('form');
+                        elem.name = "deletecomment";
+                        elem.method = "post";
+                        parent.appendChild(elem);
+                        elem.innerHTML = "<input type=\"hidden\" id=\"comment_id\" value=\"" + data[i].id + "\"/>";
                         elem = document.createElement('hr');
                         parent.appendChild(elem);
                         i++;

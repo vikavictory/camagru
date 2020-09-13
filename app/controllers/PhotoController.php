@@ -108,6 +108,17 @@ class PhotoController extends Model
 		}
 	}
 
+	public function deletecomment() {
+		//$check = Comment::checkDataForDeleteComment(); написать // передать id комментария и id автора комментария, проверить что совпадают
+		$comment_id = $_POST['comment_id'];
+		if ($check["result"] === false){
+			echo json_encode($check);
+		} else {
+			$result = Comment::deleteComment($comment_id);
+			echo json_encode($result);
+		}
+	}
+
 	public function getlikes() {
 		$check = Like::checkDataForLikesCount();
 		$photo_id = $_POST['photo_id'];

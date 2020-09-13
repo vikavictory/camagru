@@ -34,9 +34,8 @@ window.onload = function () {
     button.addEventListener('click', newComment);
 
     var button2 = document.getElementById('likeButton');
-    var changeLike = function () {
-        // event.preventDefault();
-        //console.log('event:', event);
+    var changeLike = function (event) {
+        event.preventDefault();
         var user_id = document.getElementById('user_id').value;
         var photo_id = document.getElementById('photo_id').value;
         xmlhttp.open('POST', '/changelike', true);
@@ -57,4 +56,5 @@ window.onload = function () {
 
     button2.addEventListener('click', changeLike);
     //button2.addEventListener('click', checkLike);
+    console.log(document.cookie);
 };

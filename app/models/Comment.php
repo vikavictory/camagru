@@ -34,7 +34,7 @@ class Comment extends Model
 	public static function getComments($photo_id) {
 		try {
 			$link = self::getDB();
-			$sql = "SELECT photo_id, user_id, comment_text, comments.created_at, users.login FROM comments 
+			$sql = "SELECT comments.id, photo_id, user_id, comment_text, comments.created_at, users.login FROM comments 
 					INNER JOIN users ON comments.user_id = users.id
 					WHERE photo_id=:photo_id
 					ORDER BY comments.created_at";
@@ -90,22 +90,23 @@ class Comment extends Model
 
 
 	public static function deleteComment($comment_id) {
-//		try {
-//			$link = self::getDB();
-//			$sql = "SELECT * FROM comments WHERE photo_id=:photo_id";
-//			$sth = $link->prepare($sql);
-//			$sth->bindParam(':photo_id', $photo_id);
-//			$sth->execute();
-//			$result = $sth->fetchAll(\PDO::FETCH_ASSOC);
-//		} catch( PDOException $e) {
-//			$error = $e->getMessage();
-//		} catch( Exception $e) {
-//			$error = $e->getMessage();
-//		}
-//		if ($error) {
-//			return false;
-//		}
-//		return $result;
+		try {
+			$link = self::getDB();
+			$sql = "DELETE FROM comments WHERE id=:id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':id', $comment_id);
+			$sth->execute();
+		} catch( PDOException $e) {
+			$error = $e->getMessage();
+		} catch( Exception $e) {
+			$error = $e->getMessage();
+		}
+		if ($error) {
+			return ["result" => "Произошла ошибка при удалении комментария"];
+		}
+		return ["result" => true];
 	}
+
+	// оповещение о комментарии;
 
 }
