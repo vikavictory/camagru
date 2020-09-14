@@ -150,6 +150,7 @@ class Photo extends Model
 	}
 
 	public static function getPhoto($photo_id) {
+		$error = ""; // для windows
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id, user_id, photo, description, created_at FROM photos WHERE id=:id";

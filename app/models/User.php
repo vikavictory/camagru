@@ -37,6 +37,7 @@ class User extends Model
 	}
 
 	public static function getUserLogin($user_id) {
+		$error = ""; // для windows
 		try {
 			$link = self::getDB();
 			$sql = "SELECT login FROM users WHERE id=:id";

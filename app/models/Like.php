@@ -7,6 +7,8 @@ use app\Model;
 class Like extends Model
 {
 	public static function checkIfLikeIs($photo_id, $user_id) {
+		$error = ""; // для windows
+		$result = ""; // для windows
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id FROM likes
@@ -51,6 +53,7 @@ class Like extends Model
 	}
 
 	public static function getLikesCount($photo_id) {
+		$error = ""; // для windows
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id FROM likes

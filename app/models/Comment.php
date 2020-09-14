@@ -32,6 +32,7 @@ class Comment extends Model
 	}
 
 	public static function getComments($photo_id) {
+		$error = ""; // для windows
 		try {
 			$link = self::getDB();
 			$sql = "SELECT comments.id, photo_id, user_id, comment_text, comments.created_at, users.login FROM comments 

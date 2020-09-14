@@ -3,6 +3,7 @@ function getComments() {
     document
     var xmlhttp = new XMLHttpRequest();
     var photo_id = document.getElementById('photo_id').value;
+    var activeUserId = get_cookie("user_id")
     console.log(photo_id);
     xmlhttp.open('post', '/getcomments', true);
     xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -42,11 +43,16 @@ function getComments() {
                         textNode = document.createTextNode(text);
                         elem.appendChild(textNode);
 
-                        elem = document.createElement('form');
-                        elem.name = "deletecomment";
-                        elem.method = "post";
-                        parent.appendChild(elem);
-                        elem.innerHTML = "<input type=\"hidden\" id=\"comment_id\" value=\"" + data[i].id + "\"/>";
+                        if (data[i].user_id == activeUserId) {
+                            elem = document.createElement('form');
+                            elem.name = "deletecomment";
+                            elem.method = "post";
+                            parent.appendChild(elem);
+                            elem.innerHTML = "<input type=\"hidden\" id=\"comment_id\" value=\"" + data[i].id + "\" onsubmit=\"deleteComment()\"/>" +
+                                "<input type=\"hidden\" id=\"comment_user_id\" value=\"" + data[i].user_id + "\"/>" +
+                                "<input class=\"btn btn-outline-secondary\" type=\"submit\" name=\"deleteсomment\" value=\"Удалить комментарий\"/>";
+                        }
+
                         elem = document.createElement('hr');
                         parent.appendChild(elem);
                         i++;
@@ -56,6 +62,17 @@ function getComments() {
         }
     };
 
+    function get_cookie(cookie_name)
+    {
+        var results = document.cookie.match ( '(^|;) ?' + cookie_name + '=([^;]*)(;|$)' );
+
+        if (results) {
+            return (unescape(results[2]));
+        } else {
+            return null;
+        }
+    }
+    console.log("activeUserId=" + activeUserId);
 }
 
 window.addEventListener("load", getComments);
