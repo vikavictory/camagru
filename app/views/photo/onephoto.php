@@ -41,6 +41,7 @@
             <button id="commentButton" class="btn btn-outline-secondary">Отправить</button>
         </form>
         <script src="/public/js/onephoto_onload.js"></script>
+    <script src="/public/js/delete_comment.js"></script>
     <?php } } ?>
 <?php require_once "app/views/footer.php" ?>
 

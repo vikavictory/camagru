@@ -149,6 +149,27 @@ class Photo extends Model
 				"pageNumber" => $data["pageNumber"]];
 	}
 
+	public static function getPhotoOwner($photo_id) {
+		$error = ""; // для windows
+		try {
+			$link = self::getDB();
+			$sql = "SELECT user_id FROM photos WHERE id=:id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':id', $photo_id);
+			$sth->execute();
+			$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		} catch( PDOException $e) {
+			$error = $e->getMessage();
+		} catch( Exception $e) {
+			$error = $e->getMessage();
+		}
+		if ($error) {
+			return false;
+		}
+		return $result;
+
+	}
+
 	public static function getPhoto($photo_id) {
 		$error = ""; // для windows
 		try {

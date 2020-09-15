@@ -25,6 +25,8 @@ function getComments() {
                         var parent = document.getElementsByClassName('here')[0];
                         var elem = document.createElement('div');
                         elem.className = 'comments';
+                        elem.id = "comment_id_" + data[i].id;
+
                         parent = parent.appendChild(elem);
                         elem = document.createElement('span');
                         parent.appendChild(elem);
@@ -44,13 +46,15 @@ function getComments() {
                         elem.appendChild(textNode);
 
                         if (data[i].user_id == activeUserId) {
-                            elem = document.createElement('form');
-                            elem.name = "deletecomment";
-                            elem.method = "post";
+                            elem = document.createElement('button');
+                            elem.className = "btn btn-outline-secondary";
+                            elem.id = "deletecomment";
+                            elem.value = data[i].id;
+                            elem.onclick = function() {
+                                deleteComment(this);
+                            };
+                            elem.innerHTML = "Удалить комментарий";
                             parent.appendChild(elem);
-                            elem.innerHTML = "<input type=\"hidden\" id=\"comment_id\" value=\"" + data[i].id + "\" onsubmit=\"deleteComment()\"/>" +
-                                "<input type=\"hidden\" id=\"comment_user_id\" value=\"" + data[i].user_id + "\"/>" +
-                                "<input class=\"btn btn-outline-secondary\" type=\"submit\" name=\"deleteсomment\" value=\"Удалить комментарий\"/>";
                         }
 
                         elem = document.createElement('hr');
