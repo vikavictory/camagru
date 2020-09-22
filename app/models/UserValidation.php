@@ -154,7 +154,8 @@ class UserValidation extends Model
 			return "Пароль должен включать в себя не менее 8 символов";
 		if (!(preg_match("/(?=.*[0-9])(?=.*[a-zA-Z])/", $_POST['password'])))
 			return "Некорректный пароль. Пароль должен включать в себя как минимум одну цифру, одну маленькую и 
-			одну большую латинскую букву"; //потом исправить $pattern
+			одну большую латинскую букву";
+		#todo потом исправить $pattern
 		if ($_POST['password'] !== $_POST['password2'])
 			return "Пароли не совпадают.";
 		return true;
@@ -187,4 +188,12 @@ class UserValidation extends Model
 		}
 		return true;
 	}
+
+	public static function validateChangeUserInfo()
+	{
+		if (($message = self::validateNameSurname()) !== true) {
+			return $message;
+		}
+	}
+
 }
