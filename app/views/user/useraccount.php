@@ -11,31 +11,41 @@
 				<?php } else { ?>
                     <img src="<?php echo $user['photo'];?>" alt="Фото пользователя" width=150px>
 				<?php } ?>
-                <p>This page of <?php echo $user['login'];?>.</p>
                 <p> Name: <?php echo $user['name'];?>.</p>
                 <p> Surame: <?php echo $user['surname'];?>.</p>
                 <p> Email: <?php echo $user['email'];?>.</p>
             </div>
         </div>
 
-		<?php if (isset($user['photodata'])) { ?>
-            <div id="gallery">
-                <?php if (isset($user['photodata']['photos'])) {
-					$index = 0;
-                    foreach ($user['photodata']['photos'] as $value) {
-                        if ($index === 0 || $index === 3) { ?>
-                            <p>
-                        <?php } ?>
-                        <a href="\photo\<?php echo $value['id'];?>">
-                                <img src="<?php echo $value['photo'];?>" alt="Фото пользователя" height=300px>
-                        </a>
-                        <?php if ($index === 2 || $index === count($user['photodata']['photos']) - 1) { ?>
-                            </p>
-					<?php }
-					    $index += 1;
-                    }
-				} ?>
-			</div>
+			<?php if (isset($user['photodata'])) { ?>
+					<?php if (isset($user['photodata']['photos'])) { ?>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <div id="carouselExampleIndicators" class="carousel slide my-4">
+                                <div class="row">
+									<?php foreach ($user['photodata']['photos'] as $value) { ?>
+                                        <div class="col-lg-4 col-md-6 mb-4">
+                                            <div class="card w-200">
+                                                <a href="\photo\<?php echo $value['id'];?>"><img class="card-img-top" src="<?php echo $value['photo'];?>" alt="" ></a>
+                                                <div class="card-footer">
+                                                    <small class="text-muted"><a href="\user\<?php echo $value['login'];?>"><?php echo $value['login'];?></a></small>
+                                                </div>
+                                            </div>
+                                        </div> <?php } ?>
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                            <!-- /.col-lg-9 -->
+                        </div>
+                        <!-- /.row -->
+                    </div>
+                </div>
+
+
+						<?php }
+					} ?>
+
         <nav aria-label="Page navigation example">
             <ul class="pagination">
 				<?php
@@ -55,7 +65,7 @@
 				<?php } ?>
             </ul>
         </nav>
-		<?php }
+		<?php
     } else { ?>
         <p> Доступ запрещен, пользователь не активирован </p>
     <?php } ?>

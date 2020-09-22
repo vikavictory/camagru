@@ -89,7 +89,8 @@ class PhotoController extends Model
 			echo json_encode($check);
 		} else {
 			$result = Comment::createComment();
-			if ($result) {
+			if ($result["result"] === true) {
+				Comment::sendCommentNotification($result["comment_id"]);
 				echo json_encode(["result" => true, "message" => "Комментарий успешно добавлен"]);
 			} else {
 				echo json_encode(["result" => false, "message" => "Не удалось добавить комментарий"]);
@@ -109,7 +110,8 @@ class PhotoController extends Model
 	}
 
 	public function deletecomment() {
-		//$check = Comment::checkDataForDeleteComment(); написать // передать id комментария и id автора комментария, проверить что совпадают
+		$check = Comment::checkDataForDeleteComment(); // передать id комментария и id автора комментария, проверить что совпадают
+		var_dump($_POST);
 		$comment_id = $_POST['comment_id'];
 		if ($check["result"] === false){
 			echo json_encode($check);

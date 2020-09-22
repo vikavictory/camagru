@@ -56,6 +56,26 @@ class User extends Model
 		return $result;
 	}
 
+	public static function getRecipientInformation($user_id) {
+		$error = ""; // для windows
+		try {
+			$link = self::getDB();
+			$sql = "SELECT email, notification FROM users WHERE id=:id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':id', $user_id);
+			$sth->execute();
+			$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		} catch( PDOException $e) {
+			$error = $e->getMessage();
+		} catch( Exception $e) {
+			$error = $e->getMessage();
+		}
+		if ($error) {
+			return false;
+		}
+		return $result;
+	}
+
 	private static function sendToken($user) //+
 	{
 		$data = User::getUser($user);

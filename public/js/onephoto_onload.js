@@ -1,5 +1,6 @@
 window.onload = function () {
     var button = document.getElementById('commentButton');
+    var deleteButton = document.g
     var xmlhttp = new XMLHttpRequest();
     var data;
 
@@ -55,6 +56,5 @@ window.onload = function () {
     }
 
     button2.addEventListener('click', changeLike);
-    //button2.addEventListener('click', checkLike);
     console.log(document.cookie);
 };
