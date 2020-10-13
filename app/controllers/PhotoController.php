@@ -40,8 +40,6 @@ class PhotoController extends Model
 	public function save()
 	{
 		if (isset($_POST['photo'])) {
-			//$this->debug($_POST);
-			//$this->debug($_POST['photo']);
 			$result = Photo::PhotoValidation($_POST['photo']);
 			self::debug($result);
 			if (isset($result['error'])) {
@@ -62,6 +60,9 @@ class PhotoController extends Model
 	public function getOnePhoto($photo_id)
 	{
 		if (isset($_POST['delete']) && isset($_POST['photo_id']) && isset($_POST['user_id'])) {
+			//проверки всех удалений
+			$result = Like::deleteAllLikesPhoto($_POST['photo_id']);
+			$result = Comment::deleteAllCommentsPhoto($_POST['photo_id']);
 			$result = Photo::deletePhoto($_POST['photo_id'], $_POST['user_id']);
 			if ($result) {
 				header('Location: /user/' . $_SESSION['user']);

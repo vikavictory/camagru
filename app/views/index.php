@@ -2,7 +2,8 @@
 <?php require_once "app/views/header.php" ?>
 <body>
 <?php require_once "app/views/navbar.php" ?>
-<h1 class="display-4"> Main </h1>
+<div class="container">
+    <h1 class="display-4"> Gallery </h1>
 
 <!--<div id="gallery">-->
 <!--	--><?php //if (isset($result["error"])) {
@@ -46,7 +47,7 @@
 <?php if (isset($result["error"])) {
 		echo $result["error"];
 	} else { ?>
-<div class="container">
+
     <div class="row">
         <div class="col-lg-9">
             <div id="carouselExampleIndicators" class="carousel slide my-4">

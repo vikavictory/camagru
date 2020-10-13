@@ -8,7 +8,7 @@ use app\controllers\PhotoController;
 Class Router extends Model
 {
 	private $USER_ACTIONS = ['registration', 'activate', 'login', 'logout',
-		'settings', 'user', 'token', 'recovery', 'changepassword'];
+		'settings', 'user', 'token', 'recovery', 'changepassword', 'changenotification', 'checknotification'];
 	private $PHOTO_ACTIONS = ['', 'photo', 'save', 'try', 'preview',
 								'newcomment', 'getcomments', 'deletecomment',
 								'getlikes', 'changelike'];

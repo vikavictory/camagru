@@ -95,6 +95,7 @@ class Photo extends Model
 	public static function getGallery() {
 		$photoCount = self::getPhotoCount();
 		$data = self::getStartingPhotoNumber($photoCount);
+		$error = "";
 		if (isset($data["error"])) {
 			return ["error" => $data["error"]];
 		}
@@ -123,6 +124,7 @@ class Photo extends Model
 	public static function getUserPhotos($user_id) {
 		$photoCount = self::getUserPhotoCount($user_id);
 		$data = self::getStartingPhotoNumber($photoCount);
+		$error = "";
 		if (isset($data["error"])) {
 			return ["error" => $data["error"]];
 		}
@@ -191,6 +193,7 @@ class Photo extends Model
 	}
 
 	public static function getPhotoCount() {
+		$error = "";
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id FROM photos";
@@ -209,6 +212,7 @@ class Photo extends Model
 	}
 
 	public static function getUserPhotoCount($user_id) {
+		$error = "";
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id FROM photos WHERE user_id=:user_id";
@@ -228,6 +232,7 @@ class Photo extends Model
 	}
 
 	public static function deletePhoto($photo_id, $user_id) {
+		$error = "";
 		if ($_SESSION['user_id'] !== $user_id) {
 			return false;
 		}

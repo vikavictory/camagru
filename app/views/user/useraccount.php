@@ -2,24 +2,24 @@
 <?php require_once "app/views/header.php" ?>
 <body>
 <?php require_once "app/views/navbar.php" ?>
-    <?php if ($user['activated'] === "1")
-    { ?>
+    <?php if ($user['activated'] === "1") { ?>
         <div class="container">
             <div class="jumbotron">
 				<?php if ($user['photo'] === NULL) { ?>
-                    <img src="/public/img/user.png" alt="Фото пользователя" width=150px>
+                    <img id="users-photo" src="/public/img/user.png" alt="Фото пользователя">
 				<?php } else { ?>
                     <img src="<?php echo $user['photo'];?>" alt="Фото пользователя" width=150px>
 				<?php } ?>
-                <p> Name: <?php echo $user['name'];?>.</p>
-                <p> Surame: <?php echo $user['surname'];?>.</p>
-                <p> Email: <?php echo $user['email'];?>.</p>
+                <div id="users-info">
+                    <p> Name: <?php echo $user['name'];?>.</p>
+                    <p> Surame: <?php echo $user['surname'];?>.</p>
+                    <p> Email: <?php echo $user['email'];?>.</p>
+                </div>
             </div>
         </div>
-
 			<?php if (isset($user['photodata'])) { ?>
 					<?php if (isset($user['photodata']['photos'])) { ?>
-                <div class="container">
+                <div class="container" id="row-container">
                     <div class="row">
                         <div class="col-lg-9">
                             <div id="carouselExampleIndicators" class="carousel slide my-4">
@@ -28,9 +28,9 @@
                                         <div class="col-lg-4 col-md-6 mb-4">
                                             <div class="card w-200">
                                                 <a href="\photo\<?php echo $value['id'];?>"><img class="card-img-top" src="<?php echo $value['photo'];?>" alt="" ></a>
-                                                <div class="card-footer">
-                                                    <small class="text-muted"><a href="\user\<?php echo $value['login'];?>"><?php echo $value['login'];?></a></small>
-                                                </div>
+<!--                                                <div class="card-footer">-->
+<!--                                                    <small class="text-muted"><a href="\user\--><?php //echo $value['login'];?><!--">--><?php //echo $value['login'];?><!--</a></small>-->
+<!--                                                </div>-->
                                             </div>
                                         </div> <?php } ?>
                                 </div>
@@ -41,8 +41,6 @@
                         <!-- /.row -->
                     </div>
                 </div>
-
-
 						<?php }
 					} ?>
 

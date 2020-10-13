@@ -25,7 +25,7 @@
                     <a class="nav-link" href="/user/<?php echo $_SESSION['user'];?>">My page</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/settings">Settings</a>
+                    <a class="nav-link" href="/settings">Settings</a>
                 </li>
 			<?php } else {?>
 			    <li class="nav-item">

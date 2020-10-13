@@ -133,6 +133,25 @@ class Comment extends Model
 		return ["result" => true];
 	}
 
+	public static function deleteAllCommentsPhoto($photo_id) {
+		$error = "";
+		try {
+			$link = self::getDB();
+			$sql = "DELETE FROM comments WHERE photo_id=:photo_id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':photo_id', $photo_id);
+			$sth->execute();
+		} catch( PDOException $e) {
+			$error = $e->getMessage();
+		} catch( Exception $e) {
+			$error = $e->getMessage();
+		}
+		if ($error) {
+			return ["result" => "Произошла ошибка при удалении комментариев"];
+		}
+		return ["result" => true];
+	}
+
 
 	// оповещение о комментарии;
 
@@ -143,8 +162,8 @@ class Comment extends Model
 		$recipientData = User::getRecipientInformation($recipientId["user_id"]); //получить почту и проверить включены ли комменты
 		$commentator = User::getUserLogin($commentData["user_id"]);
 
-		var_dump($commentData);
-		var_dump($recipientData);
+//		var_dump($commentData);
+//		var_dump($recipientData);
 
 		if ($recipientData["notification"] === "1") {
 			$subject = "Camagru - Новый комментарий";
@@ -159,15 +178,5 @@ class Comment extends Model
 		}
 
 	}
-
-
-		//получить id-фото -> определить id владельца фото;
-		//проверить, что включены оповещения у пользователя;
-		//отправить след инфу:
-		// -> почта владельца фото
-		// -> login комментатора +
-		// -> ссылка на фото id-фото +
-		// -> время создания комментария +
-
 
 }

@@ -2,8 +2,9 @@
 <?php require_once "app/views/header.php" ?>
 <body>
 <?php require_once "app/views/navbar.php" ?>
-
 <?php if ($photo) { ?>
+    <div class="container">
+        <div class="jumbotron">
     <script src="/public/js/getlikes.js"></script>
     <input type="hidden" id="photo_id" value="<?php echo $photo['id'];?>"/>
     <img src="<?php echo $photo['photo'];?>" alt="Фото пользователя" width=500px>
@@ -27,6 +28,7 @@
         </form>
     <?php } ?>
     <br>
+        </div>
     <h3>Комментарии</h3>
     <script src="/public/js/getcomments.js"></script>
     <div class="here" id="here2">
@@ -43,7 +45,7 @@
         <script src="/public/js/onephoto_onload.js"></script>
     <script src="/public/js/delete_comment.js"></script>
     <?php } } ?>
+    </div>
 <?php require_once "app/views/footer.php" ?>
-
 </body>
 </html>

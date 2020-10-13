@@ -12,6 +12,7 @@ class UserController extends Router
 
 	public function registration() //+
 	{
+		$message = "";
 		if (isset($_POST['submit'])) {
 			//var_dump($_POST);
 			//var_dump($_FILES);
@@ -29,6 +30,7 @@ class UserController extends Router
 
 	public function login() //+
 	{
+		$message = "";
 		if (isset($_POST['submit']))
 		{
 			$result = User::login();
@@ -67,6 +69,7 @@ class UserController extends Router
 
 	public function token() //+
 	{
+		$message = "";
 		if (isset($_GET['token']) && isset($_GET['id']))
 		{
 			$token = $_GET['token'];
@@ -87,6 +90,7 @@ class UserController extends Router
 
 	public function recovery() //+
 	{
+		$message = "";
 		if (isset($_POST['submit']))
 		{
 			$result = User::sendRecoveryLink();
@@ -102,6 +106,7 @@ class UserController extends Router
 
 	public function changepassword() //+
 	{
+		$message = "";
 		if (isset($_GET['token'])) {
 			$result = User::recoveryLinkConfirmation();
 			if (isset($result['user_id'])) {
@@ -117,6 +122,28 @@ class UserController extends Router
 		} else {
 			self::ErrorPage404();
 		}
+	}
+
+	public function settings() {
+		$pathView = $this->DIR_PATH . 'settings.php';
+		require_once $pathView;
+	}
+
+	public function checknotification() {
+		$result = User::checkNotification($_SESSION['user_id']);
+		echo json_encode($result);
+	}
+
+	public function changenotification() {
+		$result = User::checkNotification($_SESSION['user_id']);
+		if ($result["result"]) {
+			User::changeNotification($_SESSION['user_id'], '0');
+			$message["message"] = "Уведомления отключены";
+		} else {
+			User::changeNotification($_SESSION['user_id'], '1');
+			$message["message"] = "Уведомления подключены";
+		}
+		echo json_encode($message);
 	}
 
 	private function ErrorPage404()

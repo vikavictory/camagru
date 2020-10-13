@@ -2,6 +2,7 @@
 <?php require_once "app/views/header.php" ?>
 <body>
 <?php require_once "app/views/navbar.php" ?>
+<div class="container">
 <h1 class="display-4"> Change password </h1>
 
 <?php
@@ -27,7 +28,8 @@ if (isset($result['user_id'])) {
 	<input type="password" name="password2"  required><br>
 	<br><input class="btn btn-primary" type="submit" name="submit" value="SignUp"><br>
 </form>
-<?php require_once "app/views/footer.php" ?>
-</body>
-
 <?php } ?>
+<?php require_once "app/views/footer.php" ?>
+</div>
+</body>
+</html>

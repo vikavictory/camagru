@@ -12,6 +12,7 @@ class User extends Model
 {
 	public static function getUser($user)
 	{
+		$error = "";
 		//обработка ошибок
 		//что нельзя посмотреть неактивированного пользователя
 		try {
@@ -350,42 +351,41 @@ class User extends Model
 		return "Ваш пароль успешно изменен";
 	}
 
-	#todo приумать как объединить инзменение паоля в настройках кабинета и при восстановлении
-	public function changePassword($user_id) //всегда отправлять логин в пост запросе
-	{
-		if (($message = UserValidation::validatePassword()) !== true) {
-			return $message;
-		}
-		$new_password = hash('whirlpool', $_POST['password']);
-
-		// проверка, что пароль не совпадает с предыдущим;
-		$result = $this->checkNewPasswordIsDifferent($user_id, $new_password);
-		if ($result["result"] === false) {
-			return $result["message"];
-		}
-
-		//обновление пароля
-		$this->updatePassword($user_id, $new_password);
-
-		//удаление записи из таблицы reset_password
-		try {
-			$sql = "DELETE FROM reset_password WHERE user_id=:id";
-			$sth = $link->prepare($sql);
-			$sth->bindParam(':id', $user_id);
-			$sth->execute();
-		} catch( PDOException $e) {
-			return $e->getMessage();
-		} catch( Exception $e) {
-			return $e->getMessage();
-		}
-
-		return ["result" => true, "message" => "Ваш пароль успешно изменен"];
-	}
+//	#todo приумать как объединить инзменение паоля в настройках кабинета и при восстановлении
+//	public function changePassword($user_id) //всегда отправлять логин в пост запросе
+//	{
+//		if (($message = UserValidation::validatePassword()) !== true) {
+//			return $message;
+//		}
+//		$new_password = hash('whirlpool', $_POST['password']);
+//
+//		// проверка, что пароль не совпадает с предыдущим;
+//		$result = $this->checkNewPasswordIsDifferent($user_id, $new_password);
+//		if ($result["result"] === false) {
+//			return $result["message"];
+//		}
+//
+//		//обновление пароля
+//		$this->updatePassword($user_id, $new_password);
+//
+//		//удаление записи из таблицы reset_password
+//		try {
+//			$sql = "DELETE FROM reset_password WHERE user_id=:id";
+//			$sth = $link->prepare($sql);
+//			$sth->bindParam(':id', $user_id);
+//			$sth->execute();
+//		} catch( PDOException $e) {
+//			return $e->getMessage();
+//		} catch( Exception $e) {
+//			return $e->getMessage();
+//		}
+//
+//		return ["result" => true, "message" => "Ваш пароль успешно изменен"];
+//	}
 
 	public function resetPassword($user_id)
 	{
 		$result = $this->changePassword($user_id);
-		//if ($result["result"])
 		//удаление записи из таблицы reset_password
 		try {
 			$sql = "DELETE FROM reset_password WHERE user_id=:id";
@@ -398,4 +398,41 @@ class User extends Model
 			return $e->getMessage();
 		}
 	}
+
+	public function checkNotification($user_id) {
+		try {
+			$link = self::getDB();
+			$sql = "SELECT notification FROM users WHERE id=:id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':id', $user_id);
+			$sth->execute();
+			$result = $sth->fetch(\PDO::FETCH_ASSOC);
+		} catch( PDOException $e) {
+			return $e->getMessage();
+		} catch( Exception $e) {
+			return $e->getMessage();
+		}
+		if ($result["notification"] === '1') {
+			return ["result" => true];
+		} else {
+			return ["result" => false];
+		}
+	}
+
+	public function changeNotification($user_id, $notification) {
+		try {
+			$link = self::getDB();
+			$sql = "UPDATE users SET notification=:notification WHERE id=:id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':id', $user_id);
+			$sth->bindParam(':notification', $notification);
+			$sth->execute();
+		} catch( PDOException $e) {
+			return $e->getMessage();
+		} catch( Exception $e) {
+			return $e->getMessage();
+		}
+		return true;
+	}
+
 }

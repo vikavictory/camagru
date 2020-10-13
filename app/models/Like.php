@@ -93,6 +93,25 @@ class Like extends Model
 		return true;
 	}
 
+	public static function deleteAllLikesPhoto($photo_id) {
+		try {
+			$link = self::getDB();
+			$sql = "DELETE FROM likes
+			WHERE photo_id=:photo_id";
+			$sth = $link->prepare($sql);
+			$sth->bindParam(':photo_id', $photo_id);
+			$sth->execute();
+		} catch( PDOException $e) {
+			$error = $e->getMessage();
+		} catch( Exception $e) {
+			$error = $e->getMessage();
+		}
+		if ($error) {
+			return false;
+		}
+		return true;
+	}
+
 	public static function checkDataForLikesChanging() {
 		if (!isset($_SESSION["user"]) && !isset($_SESSION["user_id"])) {
 			return ["result" => false, "message" => "Пользователь не авторизирован"];

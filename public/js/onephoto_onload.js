@@ -1,6 +1,6 @@
 window.onload = function () {
     var button = document.getElementById('commentButton');
-    var deleteButton = document.g
+    //var deleteButton = document.g
     var xmlhttp = new XMLHttpRequest();
     var data;
 
