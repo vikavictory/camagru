@@ -22,8 +22,8 @@ class PhotoController extends Model
 
 	public function photo()
 	{
-		self::debug($_POST);
-		self::debug($_FILES);
+		//self::debug($_POST);
+		//self::debug($_FILES);
 		if (isset($_FILES['image']) && $_POST['submit'] === "Download") {
 			$result = Photo::getBase64();
 			if (isset($result['error'])) {
@@ -41,12 +41,15 @@ class PhotoController extends Model
 	{
 		if (isset($_POST['photo'])) {
 			$result = Photo::PhotoValidation($_POST['photo']);
-			self::debug($result);
+			//self::debug($result);
 			if (isset($result['error'])) {
 				//здесь нужно отправить ошибку через ajax - как??
 				echo $result['error'];
 			} else {
-				$result = Photo::saveToDB($_POST['photo'], $_SESSION['user_id']);
+				//$photo = Photo::mergePhotos($_POST['photo'], '0');
+				$photo = $_POST['photo'];
+				$result = Photo::saveToDB($photo, $_SESSION['user_id']);
+				self::debug($photo);
 			}
 		}
 	}

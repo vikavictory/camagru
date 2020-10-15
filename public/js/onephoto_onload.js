@@ -1,6 +1,5 @@
 window.onload = function () {
     var button = document.getElementById('commentButton');
-    //var deleteButton = document.g
     var xmlhttp = new XMLHttpRequest();
     var data;
 
@@ -46,7 +45,7 @@ window.onload = function () {
         xmlhttp.send(data);
         xmlhttp.onload = () => {
             if (xmlhttp.status != 200) {
-                console.log("аааашибка!");
+                console.log("ошибка!");
             } else {
                 console.log(xmlhttp.response);
             }

@@ -10,8 +10,8 @@
             <button id="notificationButton" class="btn btn-outline-secondary"></button>
         </div>
     </div>
+    <?php require_once "app/views/photo/masks.php" ?>
 </div>
-<script src="/public/js/change_notification.js"></script>
 </body>
 <?php require_once "app/views/footer.php" ?>
 </html>
