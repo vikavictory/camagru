@@ -1,11 +1,13 @@
+var canvas = document.getElementById('canvas');
+var video = document.getElementById('video');
+var button = document.getElementById('button');
+var context = canvas.getContext('2d')
+var img = new Image();
+var base64dataUrl ;
+const getCanvasVideo = () => document.getElementById("videoId");
+const getCanvasPhoto = () => document.getElementById("canvas");
 
 window.onload = function () {
-    var canvas = document.getElementById('canvas');
-    var video = document.getElementById('video');
-    var button = document.getElementById('button');
-    var context = canvas.getContext('2d')
-    var img = new Image();
-    var base64dataUrl ;
 
     var captureMe = function () {
         context.translate(canvas.width, 0);
@@ -33,3 +35,28 @@ window.onload = function () {
             video.play();
         });
 };
+
+function addMask(mask) {
+
+    alert("here")
+
+    var element = document.getElementById(mask);
+
+    let canvas2 = document.createElement('canvas');
+    canvas2.width = 320;
+    canvas2.height = 240;
+    canvas2.draggable = true;
+    canvas2.id = mask;
+    canvas2.style.zIndex = 3;
+    canvas2.style.position = 'absolute';
+    getCanvasVideo().appendChild(canvas2);
+
+    var img2 = new Image();
+    img2.src = document.getElementById(element).value;
+
+    var context = canvas2.getContext('2d');
+    context.drawImage(img2, 100, 100, 100, 100);
+
+    maxZIndex++;
+
+}

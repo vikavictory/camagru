@@ -255,13 +255,11 @@ class Photo extends Model
 
 	public function mergePhotos($photo, $mask) {
 		//imagecreatefromstring($photo);
-
 		$image = imagecreatefrompng(base64_encode($photo));
 		$pathToImage = "..\..\public\masks\\" . $mask . ".png";
 		$filter = imagecreatefrompng($pathToImage);
 		//imagealphablending($filter, false);
 		//imagesavealpha($filter, true);
-
 		//imagecopy($image, $filter, 43, 95, 0, 0, imagesx($filter), imagesy($filter));
 		//imagepng($image);
 		//var_dump($image);
