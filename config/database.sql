@@ -3,16 +3,17 @@ CREATE SCHEMA IF NOT EXISTS `camagru`;
 USE camagru;
 
 CREATE TABLE IF NOT EXISTS users (
-    id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    login		CHAR(20) NOT NULL UNIQUE,
-    email		CHAR(50) NOT NULL UNIQUE,
-    `name`		VARCHAR(30) NOT NULL,
-    surname		VARCHAR(30) NOT NULL,
-    password	VARCHAR(255) NOT NULL,
-    token       VARCHAR(255),
-    activated   BOOLEAN DEFAULT '0',
-    photo       LONGBLOB,
-    created_at	TIMESTAMP);
+    id			    INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    login		    CHAR(20) NOT NULL UNIQUE,
+    email		    CHAR(50) NOT NULL UNIQUE,
+    `name`		    VARCHAR(30) NOT NULL,
+    surname		    VARCHAR(30) NOT NULL,
+    password	    VARCHAR(255) NOT NULL,
+    token           VARCHAR(255),
+    activated       BOOLEAN DEFAULT '0',
+    photo           LONGBLOB,
+    notification    BOOLEAN DEFAULT '0',
+    created_at	    TIMESTAMP);
 
 CREATE TABLE IF NOT EXISTS photos (
 	id			INT PRIMARY KEY NOT NULL AUTO_INCREMENT,

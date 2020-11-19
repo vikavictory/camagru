@@ -1,6 +1,8 @@
 <?php
 
-require_once 'database.php';
+//require_once 'database.php';
+$DB_USER = 'root';
+$DB_PASSWORD = 'test';
 $db = new PDO('mysql:host=127.0.0.1', $DB_USER, $DB_PASSWORD);
 $sql = file_get_contents('database.sql');
 $query = $db->exec($sql);
@@ -14,9 +16,4 @@ $sth = $db->prepare($sql);
 $sth->bindParam(':password', $password);
 $sth->bindParam(':created_at', $created_at);
 $sth->execute();
-
-
-
-
-
 
