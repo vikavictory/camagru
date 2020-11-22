@@ -8,12 +8,11 @@
 				<?php if ($user['photo'] === NULL) { ?>
                     <img id="users-photo" src="/public/img/user.png" alt="Фото пользователя">
 				<?php } else { ?>
-                    <img src="<?php echo $user['photo'];?>" alt="Фото пользователя" width=150px>
+                    <img src="<?php echo htmlspecialchars($user['photo']);?>" alt="Фото пользователя" width=150px>
 				<?php } ?>
                 <div id="users-info">
-                    <p> Name: <?php echo $user['name'];?>.</p>
-                    <p> Surame: <?php echo $user['surname'];?>.</p>
-                    <p> Email: <?php echo $user['email'];?>.</p>
+                    <p> <?php echo htmlspecialchars($user['name']);?> <?php echo htmlspecialchars($user['surname']);?></p>
+                    <p> Email: <?php echo htmlspecialchars($user['email']);?>.</p>
                 </div>
             </div>
         </div>
@@ -27,23 +26,16 @@
 									<?php foreach ($user['photodata']['photos'] as $value) { ?>
                                         <div class="col-lg-4 col-md-6 mb-4">
                                             <div class="card w-200">
-                                                <a href="\photo\<?php echo $value['id'];?>"><img class="card-img-top" src="<?php echo $value['photo'];?>" alt="" ></a>
-<!--                                                <div class="card-footer">-->
-<!--                                                    <small class="text-muted"><a href="\user\--><?php //echo $value['login'];?><!--">--><?php //echo $value['login'];?><!--</a></small>-->
-<!--                                                </div>-->
+                                                <a href="\photo\<?php echo $value['id'];?>"><img class="card-img-top" src="<?php echo htmlspecialchars($value['photo']);?>" alt="" ></a>
                                             </div>
                                         </div> <?php } ?>
                                 </div>
-                                <!-- /.row -->
                             </div>
-                            <!-- /.col-lg-9 -->
                         </div>
-                        <!-- /.row -->
                     </div>
                 </div>
 						<?php }
 					} ?>
-
         <nav aria-label="Page navigation example">
             <ul class="pagination">
 				<?php

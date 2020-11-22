@@ -6,7 +6,7 @@
 <h1 class="display-4">Token</h1>
 <?php
 if ($message !== "") {
-	echo "<p>" . $message . "</p>";
+	echo "<p>" . htmlspecialchars($message) . "</p>";
 	$message = "";
 }
 ?>

@@ -1,8 +1,66 @@
-
 video {
+    position: absolute;
     transform: scaleX(-1);
     -o-transform: scaleX(-1);
     -ms-transform: scaleX(-1);
     -moz-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
+}
+
+#videoBlock {
+    display: inline-block;
+}
+
+#previewBlock {
+    display: inline-block;
+}
+
+#canvasVideo {
+    position: absolute;
+}
+
+#allMasks {
+    position: absolute;
+}
+
+#image {
+    position: absolute;
+}
+
+#comment {
+    width: 100%;
+}
+
+#canvas {
+    position: absolute;
+}
+
+#canvasMasks {
+    position: absolute;
+}
+
+.mask {
+    display: inline-block;
+    margin: 0 auto;
+    width: 45%;
+    height: 40%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+
+.randomPhotos {
+    display: inline-block;
+    margin: 0 auto;
+    height: 40%;
+    width: 49%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    word-wrap: normal;
+}
+
+.randomPhoto {
+    height: 100%;
 }

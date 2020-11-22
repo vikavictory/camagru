@@ -53,6 +53,25 @@ class UserValidation extends Model
 		}
 	}
 
+    public static function checkLoginExist($login) {
+        try {
+            $link = self::getDB();
+            $sql = "SELECT id FROM users WHERE login=:login";
+            $sth = $link->prepare($sql);
+            $sth->bindParam(':login', $login);
+            $sth->execute();
+            $result = $sth->fetch(\PDO::FETCH_ASSOC);
+        } catch( PDOException $e) {
+            return $e->getMessage();
+        } catch( Exception $e) {
+            return $e->getMessage();
+        }
+        if ($result) {
+            return $result;
+        }
+        return false;
+    }
+
 	public static function validateLogin()
 	{
 		if (($message = self::checkLoginIsSet()) !== true) {
@@ -65,21 +84,10 @@ class UserValidation extends Model
 			return "Некорректный логин. Логин может включать в себя только цифры 
 					и маленькие латинские буквы.";
 		}
-		try {
-			$link = self::getDB();
-			$sql = "SELECT id FROM users WHERE login=:login";
-			$sth = $link->prepare($sql);
-			$sth->bindParam(':login', $_POST['login']);
-			$sth->execute();
-			$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		} catch( PDOException $e) {
-			return $e->getMessage();
-		} catch( Exception $e) {
-			return $e->getMessage();
-		}
-		if ($result) {
-			return "Пользователь с таким именем уже существует";
-		}
+        if (self::checkLoginExist($_POST['login']) !== false) {
+            return "Такой login уже зарегестрирован";
+        }
+
 		return true;
 	}
 
@@ -178,6 +186,40 @@ class UserValidation extends Model
 		return true;
 	}
 
+    public static function validateUserUpdate()
+    {
+        if (($message = self::checkLoginIsSet()) !== true) {
+            return $message;
+        }
+        if (strlen($_POST['login']) > 20) {
+            return "Логин должен включать в себя не больше 20 символов";
+        }
+        if (!(preg_match("/^[a-z][a-z0-9]{1,20}$/", $_POST['login']))) {
+            return "Некорректный логин. Логин может включать в себя только цифры 
+					и маленькие латинские буквы.";
+        }
+
+        $login = self::checkLoginExist($_POST['login']);
+        if ($login !== false && $login["id"]  !== $_SESSION["user_id"]) {
+            return "Такой login уже зарегестрирован";
+        }
+        if (($message = self::checkEmailIsSet()) !== true) {
+            return $message;
+        }
+        if (!(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))) {
+            return "E-mail адрес указан неверно";
+        }
+        $email = self::checkEmailExist($_POST['email']);
+        if ($email !== false && $email["id"] !== $_SESSION["user_id"]) {
+            return "Такой e-mail уже зарегестрирован";
+        }
+
+        if (($message = self::validateNameSurname()) !== true) {
+            return $message;
+        }
+        return true;
+    }
+
 	public static function validateAuth()
 	{
 		if (($message = self::checkLoginIsSet()) !== true) {
@@ -187,13 +229,6 @@ class UserValidation extends Model
 			return $message;
 		}
 		return true;
-	}
-
-	public static function validateChangeUserInfo()
-	{
-		if (($message = self::validateNameSurname()) !== true) {
-			return $message;
-		}
 	}
 
 }

@@ -5,6 +5,8 @@ namespace app\models;
 use app\Model;
 use app\models\User;
 use app\models\Photo;
+use Exception;
+use PDOException;
 
 class Comment extends Model
 {
@@ -33,7 +35,7 @@ class Comment extends Model
 	}
 
 	public static function getComments($photo_id) {
-		$error = ""; // для windows
+		$error = "";
 		try {
 			$link = self::getDB();
 			$sql = "SELECT comments.id, photo_id, user_id, comment_text, comments.created_at, users.login FROM comments 
@@ -56,7 +58,7 @@ class Comment extends Model
 	}
 
 	public static function getOneComment($comment_id) {
-		$error = ""; // для windows
+		$error = "";
 		try {
 			$link = self::getDB();
 			$sql = "SELECT * FROM comments 
@@ -152,18 +154,12 @@ class Comment extends Model
 		return ["result" => true];
 	}
 
-
-	// оповещение о комментарии;
-
 	public static function sendCommentNotification($comment_id)
 	{
 		$commentData = Comment::getOneComment($comment_id);
 		$recipientId = Photo::getPhotoOwner($commentData["photo_id"]);
-		$recipientData = User::getRecipientInformation($recipientId["user_id"]); //получить почту и проверить включены ли комменты
+		$recipientData = User::getRecipientInformation($recipientId["user_id"]);
 		$commentator = User::getUserLogin($commentData["user_id"]);
-
-//		var_dump($commentData);
-//		var_dump($recipientData);
 
 		if ($recipientData["notification"] === "1") {
 			$subject = "Camagru - Новый комментарий";

@@ -3,8 +3,8 @@
 namespace app\models;
 
 use app\Model;
-use app\models\UserValidation;
 use app\models\Photo;
+use app\models\UserValidation;
 use Exception;
 use PDOException;
 
@@ -13,8 +13,6 @@ class User extends Model
 	public static function getUser($user)
 	{
 		$error = "";
-		//обработка ошибок
-		//что нельзя посмотреть неактивированного пользователя
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id, login, name, surname, email, token, activated, photo FROM users WHERE login=:login";
@@ -37,8 +35,91 @@ class User extends Model
 		return $result;
 	}
 
+    public static function updateUserInfoDB($user)
+    {
+        $error = "";
+        try {
+            $link = self::getDB();
+            $sql = "UPDATE users SET login=:login, name=:name, surname=:surname, email=:email WHERE id=:id";
+            $sth = $link->prepare($sql);
+            $sth->bindParam(':login', $user["login"]);
+            $sth->bindParam(':name', $user["name"]);
+            $sth->bindParam(':surname', $user["surname"]);
+            $sth->bindParam(':email', $user["email"]);
+            $sth->bindParam(':id', $user["id"]);
+            $sth->execute();
+            $result = $sth->fetch(\PDO::FETCH_ASSOC);
+        } catch( PDOException $e) {
+            $error = $e->getMessage();
+        } catch( Exception $e) {
+            $error = $e->getMessage();
+        }
+        return $result;
+    }
+
+    public static function updateUserAvatar() {
+
+	    if ($_FILES['image']['name']) {
+            $result = Photo::getBase64();
+            if (isset($result['error'])) {
+                return $result['error'];
+            }
+            if (isset($result['photo'])) {
+                $photo = $result['photo'];
+            } else {
+                return "Произошла ошибка";
+            }
+        } else {
+            return "Фото не выбрано";
+        }
+
+	    self::changeUserAvatar($photo);
+	    return "Фото успешно изменено";
+
+    }
+
+    public static function changeUserAvatar($photo)
+    {
+        $error = "";
+        try {
+            $link = self::getDB();
+            $sql = "UPDATE users SET photo=:photo WHERE id=:id";
+            $sth = $link->prepare($sql);
+            $sth->bindParam(':id', $_SESSION["user_id"]);
+            $sth->bindParam(':photo', $photo);
+            $sth->execute();
+            $result = $sth->fetch(\PDO::FETCH_ASSOC);
+        } catch( PDOException $e) {
+            $error = $e->getMessage();
+        } catch( Exception $e) {
+            $error = $e->getMessage();
+        }
+        return $result;
+    }
+
+    public static function changeUserInfo()
+    {
+        if (($validation = UserValidation::validateUserUpdate()) !== true) {
+            return $validation;
+        }
+
+        $user = [
+            "id" => $_SESSION['user_id'],
+            "login" => $_POST['login'],
+            "email" => $_POST['email'],
+            "name" => $_POST['name'],
+            "surname" => $_POST['surname']
+        ];
+
+        self::updateUserInfoDB($user);
+        $_SESSION["user"] = $user["login"];
+        setcookie('user', $user["login"]);
+
+        return "Ваши данные успешно изменены";
+    }
+
 	public static function getUserLogin($user_id) {
-		$error = ""; // для windows
+		$error = "";
 		try {
 			$link = self::getDB();
 			$sql = "SELECT login FROM users WHERE id=:id";
@@ -58,7 +139,7 @@ class User extends Model
 	}
 
 	public static function getRecipientInformation($user_id) {
-		$error = ""; // для windows
+		$error = "";
 		try {
 			$link = self::getDB();
 			$sql = "SELECT email, notification FROM users WHERE id=:id";
@@ -105,11 +186,9 @@ class User extends Model
 		$token = md5($_POST['email'] . "918273645");
 		$password = hash('whirlpool', $_POST['password']);
 		$created_at = date("Y-m-d H:i:s");
-		//строчка для автоматической активации - убрать
-		$activated = 1;
+		$activated = 0;
 		try {
 			$link = self::getDB();
-			//убрать активацию потом
 			$sql = "INSERT INTO users (login, name, surname, password, email, token, photo, created_at, activated)
 			VALUES (:login, :name, :surname, :password, :email, :token, :photo, :created_at, :activated)";
 			$sth = $link->prepare($sql);
@@ -121,7 +200,6 @@ class User extends Model
 			$sth->bindParam(':token', $token);
 			$sth->bindParam(':photo', $photo);
 			$sth->bindParam(':created_at', $created_at);
-			//строчка для автоматической активации - убрать
 			$sth->bindParam(':activated', $activated);
 			$sth->execute();
 		} catch( PDOException $e) {
@@ -129,8 +207,7 @@ class User extends Model
 		} catch( Exception $e) {
 			return $e->getMessage();
 		}
-		//$result = self::sendToken($_POST['login']);
-		$result = true;
+		$result = self::sendToken($_POST['login']);
 		if ($result) {
 			return true;
 		} else {
@@ -138,7 +215,7 @@ class User extends Model
 		}
 	}
 
-	public function login() //+
+	public static function login()
 	{
 		if (($validation = UserValidation::validateAuth()) !== true) {
 			return $validation;
@@ -172,7 +249,7 @@ class User extends Model
 		}
 	}
 
-	public function activateAccount($id, $token) //+
+	public static function activateAccount($id, $token) //+
 	{
 		try {
 			$link = self::getDB();
@@ -205,7 +282,7 @@ class User extends Model
 		return true;
 	}
 
-	public function sendRecoveryLink() //+
+	public static function sendRecoveryLink() //+
 	{
 		if (($validation = UserValidation::checkEmailIsSet()) !== true) {
 			return $validation;
@@ -258,7 +335,7 @@ class User extends Model
 		return true;
 	}
 
-	public function recoveryLinkConfirmation()
+	public static function recoveryLinkConfirmation()
 	{
 		if (isset($_GET['token'])) {
 			try {
@@ -282,7 +359,7 @@ class User extends Model
 		}
 	}
 
-	public function checkNewPasswordIsDifferent($user_id, $new_password)
+	public static function checkNewPasswordIsDifferent($user_id, $new_password)
 	{
 		try {
 			$link = self::getDB();
@@ -304,7 +381,7 @@ class User extends Model
 
 	}
 
-	public function updatePassword($user_id, $password)
+	public static function updatePassword($user_id, $password)
 	{
 		try {
 			$link = self::getDB();
@@ -321,7 +398,7 @@ class User extends Model
 		return true;
 	}
 
-	public function changePassword($user_id) //всегда отправлять логин
+	public static function changePassword($user_id)
 	{
 		if (($message = UserValidation::validatePassword()) !== true) {
 			return $message;
@@ -329,110 +406,29 @@ class User extends Model
 		$new_password = hash('whirlpool', $_POST['password']);
 
 		// проверка, что пароль не совпадает с предыдущим;
-		$result = $this->checkNewPasswordIsDifferent($user_id, $new_password);
+		$result = self::checkNewPasswordIsDifferent($user_id, $new_password);
 		if ($result["result"] === false) {
 			return $result["message"];
 		}
 
 		//обновление пароля
-		$this->updatePassword($user_id, $new_password);
+		self::updatePassword($user_id, $new_password);
 
-		//удаление записи из таблицы reset_password
-		try {
-			$sql = "DELETE FROM reset_password WHERE user_id=:id";
-			$sth = $link->prepare($sql);
-			$sth->bindParam(':id', $user_id);
-			$sth->execute();
-		} catch( PDOException $e) {
-			return $e->getMessage();
-		} catch( Exception $e) {
-			return $e->getMessage();
-		}
 		return "Ваш пароль успешно изменен";
 	}
 
-//	#todo приумать как объединить инзменение паоля в настройках кабинета и при восстановлении
-//	public function changePassword($user_id) //всегда отправлять логин в пост запросе
-//	{
-//		if (($message = UserValidation::validatePassword()) !== true) {
-//			return $message;
-//		}
-//		$new_password = hash('whirlpool', $_POST['password']);
-//
-//		// проверка, что пароль не совпадает с предыдущим;
-//		$result = $this->checkNewPasswordIsDifferent($user_id, $new_password);
-//		if ($result["result"] === false) {
-//			return $result["message"];
-//		}
-//
-//		//обновление пароля
-//		$this->updatePassword($user_id, $new_password);
-//
-//		//удаление записи из таблицы reset_password
-//		try {
-//			$sql = "DELETE FROM reset_password WHERE user_id=:id";
-//			$sth = $link->prepare($sql);
-//			$sth->bindParam(':id', $user_id);
-//			$sth->execute();
-//		} catch( PDOException $e) {
-//			return $e->getMessage();
-//		} catch( Exception $e) {
-//			return $e->getMessage();
-//		}
-//
-//		return ["result" => true, "message" => "Ваш пароль успешно изменен"];
-//	}
-
-	public function resetPassword($user_id)
-	{
-		$result = $this->changePassword($user_id);
-		//удаление записи из таблицы reset_password
-		try {
-			$sql = "DELETE FROM reset_password WHERE user_id=:id";
-			$sth = $link->prepare($sql);
-			$sth->bindParam(':id', $user_id);
-			$sth->execute();
-		} catch( PDOException $e) {
-			return $e->getMessage();
-		} catch( Exception $e) {
-			return $e->getMessage();
-		}
-	}
-
-	public function checkNotification($user_id) {
-		try {
-			$link = self::getDB();
-			$sql = "SELECT notification FROM users WHERE id=:id";
-			$sth = $link->prepare($sql);
-			$sth->bindParam(':id', $user_id);
-			$sth->execute();
-			$result = $sth->fetch(\PDO::FETCH_ASSOC);
-		} catch( PDOException $e) {
-			return $e->getMessage();
-		} catch( Exception $e) {
-			return $e->getMessage();
-		}
-		if ($result["notification"] === '1') {
-			return ["result" => true];
-		} else {
-			return ["result" => false];
-		}
-	}
-
-	public function changeNotification($user_id, $notification) {
-		try {
-			$link = self::getDB();
-			$sql = "UPDATE users SET notification=:notification WHERE id=:id";
-			$sth = $link->prepare($sql);
-			$sth->bindParam(':id', $user_id);
-			$sth->bindParam(':notification', $notification);
-			$sth->execute();
-		} catch( PDOException $e) {
-			return $e->getMessage();
-		} catch( Exception $e) {
-			return $e->getMessage();
-		}
-		return true;
-	}
-
+	public static function deleteFromResetPassword($user_id) {
+        try {
+            $link = self::getDB();
+            $sql = "DELETE FROM reset_password WHERE user_id=:id";
+            $sth = $link->prepare($sql);
+            $sth->bindParam(':id', $user_id);
+            $sth->execute();
+        } catch( PDOException $e) {
+            return $e->getMessage();
+        } catch( Exception $e) {
+            return $e->getMessage();
+        }
+        return ["result" => true, "message" => "Запись удалена"];
+    }
 }

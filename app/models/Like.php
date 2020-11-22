@@ -94,7 +94,8 @@ class Like extends Model
 	}
 
 	public static function deleteAllLikesPhoto($photo_id) {
-		try {
+		$error = "";
+	    try {
 			$link = self::getDB();
 			$sql = "DELETE FROM likes
 			WHERE photo_id=:photo_id";

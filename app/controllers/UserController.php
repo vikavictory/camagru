@@ -2,8 +2,8 @@
 
 namespace app\controllers;
 
-use app\Model;
 use app\models\User;
+use app\models\Notification;
 use app\Router;
 
 class UserController extends Router
@@ -12,10 +12,11 @@ class UserController extends Router
 
 	public function registration() //+
 	{
+        if (self::checkSession() === true) {
+            header('Location: /user/' . $_SESSION['user']);
+        }
 		$message = "";
 		if (isset($_POST['submit'])) {
-			//var_dump($_POST);
-			//var_dump($_FILES);
 			$result = User::createUser();
 			if ($result === true) {
 				$message = "Ваш аккаунт создан, для его активации 
@@ -28,8 +29,11 @@ class UserController extends Router
 		require_once $pathView;
 	}
 
-	public function login() //+
+	public function login()
 	{
+        if (self::checkSession() === true) {
+            header('Location: /user/' . $_SESSION['user']);
+        }
 		$message = "";
 		if (isset($_POST['submit']))
 		{
@@ -45,11 +49,9 @@ class UserController extends Router
 
 	public function user($user)
 	{
-
 		$user = User::getUser($user);
 		if ($user)
 		{
-			//$this->debug($user);
 			$pathView = $this->DIR_PATH . 'useraccount.php';
 			require_once $pathView;
 		}
@@ -58,7 +60,7 @@ class UserController extends Router
 		}
 	}
 
-	public function logout() //+
+	public function logout()
 	{
 		$_SESSION['user'] = "";
 		$_SESSION['user_id'] = "";
@@ -67,8 +69,11 @@ class UserController extends Router
 		header('Location: /');
 	}
 
-	public function token() //+
+	public function token()
 	{
+        if (self::checkSession() === true) {
+            header('Location: /user/' . $_SESSION['user']);
+        }
 		$message = "";
 		if (isset($_GET['token']) && isset($_GET['id']))
 		{
@@ -88,8 +93,11 @@ class UserController extends Router
 		}
 	}
 
-	public function recovery() //+
+	public function recovery()
 	{
+        if (self::checkSession() === true) {
+            header('Location: /user/' . $_SESSION['user']);
+        }
 		$message = "";
 		if (isset($_POST['submit']))
 		{
@@ -104,14 +112,18 @@ class UserController extends Router
 		require_once $pathView;
 	}
 
-	public function changepassword() //+
+	public function changepassword()
 	{
+        if (self::checkSession() === true) {
+            header('Location: /user/' . $_SESSION['user']);
+        }
 		$message = "";
 		if (isset($_GET['token'])) {
 			$result = User::recoveryLinkConfirmation();
 			if (isset($result['user_id'])) {
 				if (isset($_POST['submit'])) {
 					$changeResult = User::changePassword($result['user_id']);
+					User::deleteFromResetPassword($result['user_id']);
 					$message = $changeResult;
 				}
 			} else {
@@ -125,32 +137,47 @@ class UserController extends Router
 	}
 
 	public function settings() {
-		$pathView = $this->DIR_PATH . 'settings.php';
-		require_once $pathView;
+        if (self::checkSession() === true) {
+            $pathView = $this->DIR_PATH . 'settings.php';
+            $user = User::getUser($_SESSION['user']);
+            if (isset($_POST['submit_password'])) {
+                $changeResult = User::changePassword($_SESSION['user_id']);
+                $message = $changeResult;
+            }
+            if (isset($_POST['submit_userinfo'])) {
+                $message = User::changeUserInfo();
+            }
+            if (isset($_POST['submit_deletephoto'])) {
+                $message = User::changeUserAvatar(null);
+            }
+            if (isset($_POST['submit_updatephoto'])) {
+                $message = User::updateUserAvatar();
+            }
+            require_once $pathView;
+        }
 	}
 
-	public function checknotification() {
-		$result = User::checkNotification($_SESSION['user_id']);
-		echo json_encode($result);
-	}
+	public function checknotification()
+    {
+        if (self::checkSession() === true) {
+            $result = Notification::checkNotification($_SESSION['user_id']);
+            echo json_encode($result);
+        }
+    }
 
-	public function changenotification() {
-		$result = User::checkNotification($_SESSION['user_id']);
-		if ($result["result"]) {
-			User::changeNotification($_SESSION['user_id'], '0');
-			$message["message"] = "Уведомления отключены";
-		} else {
-			User::changeNotification($_SESSION['user_id'], '1');
-			$message["message"] = "Уведомления подключены";
-		}
-		echo json_encode($message);
-	}
+	public function changenotification()
+    {
+        if (self::checkSession() === true) {
+            $result = Notification::checkNotification($_SESSION['user_id']);
+            if ($result["result"]) {
+                Notification::changeNotification($_SESSION['user_id'], '0');
+                $message["message"] = "Уведомления отключены";
+            } else {
+                Notification::changeNotification($_SESSION['user_id'], '1');
+                $message["message"] = "Уведомления подключены";
+            }
+            echo json_encode($message);
+        }
+    }
 
-	private function ErrorPage404()
-	{
-		$host = 'http://'.$_SERVER['HTTP_HOST'].'/';
-		header('HTTP/1.1 404 Not Found');
-		header("Status: 404 Not Found");
-		header('Location:'.$host.'404');
-	}
 }

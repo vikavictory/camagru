@@ -2,16 +2,19 @@
 
 namespace app;
 
+use app\controllers\CommentController;
+use app\controllers\LikeController;
 use app\controllers\UserController;
 use app\controllers\PhotoController;
 
 Class Router extends Model
 {
-	private $USER_ACTIONS = ['registration', 'activate', 'login', 'logout',
+	private array $USER_ACTIONS = ['registration', 'activate', 'login', 'logout',
 		'settings', 'user', 'token', 'recovery', 'changepassword', 'changenotification', 'checknotification'];
-	private $PHOTO_ACTIONS = ['', 'photo', 'save', 'try', 'preview',
-								'newcomment', 'getcomments', 'deletecomment',
-								'getlikes', 'changelike'];
+	private array $PHOTO_ACTIONS = ['', 'photo', 'save'];
+    private array $COMMENT_ACTIONS = ['newcomment', 'getcomments', 'deletecomment'];
+
+    private array $LIKE_ACTIONS = ['getlikes', 'changelike'];
 
 	protected function getUri()
 	{
@@ -34,6 +37,10 @@ Class Router extends Model
 			return 'UserController';
 		if (array_search($route, $this->PHOTO_ACTIONS) !== FALSE)
 			return 'PhotoController';
+        if (array_search($route, $this->LIKE_ACTIONS) !== FALSE)
+            return 'LikeController';
+        if (array_search($route, $this->COMMENT_ACTIONS) !== FALSE)
+            return 'CommentController';
 		else
 			return FALSE;
 	}
@@ -74,17 +81,29 @@ Class Router extends Model
 					self::ErrorPage404();
 				}
 			}
+
+            if ($controller_name === "LikeController")
+            {
+                $controller = new LikeController;
+                if (count($routes) === 1) {
+                    $controller->$action();
+                } else {
+                    self::ErrorPage404();
+                }
+            }
+
+            if ($controller_name === "CommentController")
+            {
+                $controller = new CommentController();
+                if (count($routes) === 1) {
+                    $controller->$action();
+                } else {
+                    self::ErrorPage404();
+                }
+            }
 		} else {
 			self::ErrorPage404();
 		}
-	}
-
-	private function ErrorPage404()
-	{
-		$host = 'http://'.$_SERVER['HTTP_HOST'].'/';
-		header('HTTP/1.1 404 Not Found');
-		header("Status: 404 Not Found");
-		header('Location:'.$host.'404');
 	}
 
 }

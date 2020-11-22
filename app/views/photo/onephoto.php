@@ -7,7 +7,7 @@
         <div class="jumbotron">
     <script src="/public/js/getlikes.js"></script>
     <input type="hidden" id="photo_id" value="<?php echo $photo['id'];?>"/>
-    <img src="<?php echo $photo['photo'];?>" alt="Фото пользователя" width=500px>
+    <img src="<?php echo htmlspecialchars($photo['photo']);?>" alt="Фото пользователя" width=500px>
     <br>
     <div class="likes">
         <button id="likeButton" class="btn btn-light">
@@ -16,10 +16,10 @@
             </svg>
             <span id="likesCount"></span>
         </button>
-        <b><a href="\user\<?php echo $photo['login'];?>"><?php echo $photo['login'];?></a></b>
+        <b><a href="\user\<?php echo $photo['login'];?>"><?php echo htmlspecialchars($photo['login']);?></a></b>
     </div>
-    <p> Description <?php echo htmlspecialchars($photo['description'])?> </p>
-    <p> Created at  <?php echo $photo['created_at'];?> </p>
+    <p> <?php echo htmlspecialchars($photo['description'])?> </p>
+    <p> <?php echo htmlspecialchars($photo['created_at']);?> </p>
     <?php if ($_SESSION["user_id"] === $photo['user_id']) { ?>
         <form name="delete" method="post" action="">
             <input type="hidden" name="photo_id" value="<?php echo $photo['id'];?>"/>

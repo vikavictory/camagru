@@ -3,7 +3,6 @@ function showNotification() {
     var button = document.getElementById('notificationButton');
     var data;
 
-
     xmlhttp.open('post', '/checknotification', true);
     xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xmlhttp.send();

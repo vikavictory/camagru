@@ -3,7 +3,7 @@ date_default_timezone_set('Europe/Moscow');
 ini_set("SMTP", "127.0.0.1");
 ini_set("smtp_port", "25");
 
-$to = 'vika.ru96.96@yandex.ru';
+$to = 'jahig35379@bcpfm.com';
 $subject = "Camagru";
 
 $headers = "MIME-Version: 1.0\r\n";
@@ -12,7 +12,7 @@ $headers .= "Content-Transfer-Encoding: utf-8\r\n";
 $headers .= "Reply-To: no-reply@gmail.com\r\n";
 //$headers .= 'X-Mailer: PHP/' . phpversion();
 
-$message = "hikugjhg";
+$message = "hello";
 
 $result = mail($to, $subject, $message, $headers);
 

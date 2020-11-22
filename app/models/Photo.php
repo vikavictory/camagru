@@ -2,6 +2,8 @@
 
 namespace app\models;
 use app\Model;
+use Exception;
+use PDOException;
 
 class Photo extends Model
 {
@@ -26,15 +28,14 @@ class Photo extends Model
 			}
 			$fi = finfo_open(FILEINFO_MIME_TYPE); // Создадим ресурс FileInfo
 			$mime = (string)finfo_file($fi, $fileTmpName); // Получим MIME-тип
-			Model::debug($mime);
 			if (strpos($mime, 'image') === false) {
 				return (['error' => "Можно загружать только изображения."]);
 			}
 			$data = file_get_contents($fileTmpName);
-			//сделать определение формата картинки
 			$result = "data:image/png;base64," . base64_encode($data);
 			return (['photo' => $result]);
 		}
+        return (['error' => "Фото не выбрано"]);
 	}
 
 	public static function PhotoValidation($photo) {
@@ -46,14 +47,15 @@ class Photo extends Model
 		}
 	}
 
-	public static function saveToDB($photo, $user_id) {
+	public static function saveToDB($photo, $description, $user_id) {
 		$created_at = date("Y-m-d H:i:s");
 		try {
 			$link = self::getDB();
-			$sql = "INSERT INTO photos (user_id, created_at, photo)
-			VALUES (:user_id, :created_at, :photo)";
+			$sql = "INSERT INTO photos (user_id, description, created_at, photo)
+			VALUES (:user_id, :description, :created_at, :photo)";
 			$sth = $link->prepare($sql);
 			$sth->bindParam(':user_id', $user_id);
+			$sth->bindParam(':description', $description);
 			$sth->bindParam(':photo', $photo);
 			$sth->bindParam(':created_at', $created_at);
 			$sth->execute();
@@ -103,7 +105,7 @@ class Photo extends Model
 			$link = self::getDB();
 			$sql = "SELECT photos.id, photos.photo, users.login FROM photos
     				INNER JOIN users ON photos.user_id = users.id
-					ORDER BY photos.created_at
+					ORDER BY photos.created_at DESC 
 					LIMIT " . $data["from"] . ", 6";
 			$sth = $link->prepare($sql);
 			$sth->execute();
@@ -121,6 +123,25 @@ class Photo extends Model
 				"pageNumber" => $data["pageNumber"]];
 	}
 
+	public static function getRandomPhotos() {
+        try {
+            $link = self::getDB();
+            $sql = "SELECT photos.id, photos.photo, users.login FROM photos
+    				INNER JOIN users ON photos.user_id = users.id
+					ORDER BY rand() 
+					LIMIT 10";
+            $sth = $link->prepare($sql);
+            $sth->execute();
+            $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
+        } catch( PDOException $e) {
+            $error = $e->getMessage();
+        } catch( Exception $e) {
+            $error = $e->getMessage();
+        }
+
+        return ["photos" => $result];
+    }
+
 	public static function getUserPhotos($user_id) {
 		$photoCount = self::getUserPhotoCount($user_id);
 		$data = self::getStartingPhotoNumber($photoCount);
@@ -132,7 +153,7 @@ class Photo extends Model
 			$link = self::getDB();
 			$sql = "SELECT id, photo FROM photos
 					WHERE user_id=:user_id
-					ORDER BY created_at
+					ORDER BY created_at DESC 
 					LIMIT " . $data["from"] . ", 6";
 			$sth = $link->prepare($sql);
 			$sth->bindParam(':user_id', $user_id);
@@ -152,7 +173,7 @@ class Photo extends Model
 	}
 
 	public static function getPhotoOwner($photo_id) {
-		$error = ""; // для windows
+		$error = "";
 		try {
 			$link = self::getDB();
 			$sql = "SELECT user_id FROM photos WHERE id=:id";
@@ -173,7 +194,7 @@ class Photo extends Model
 	}
 
 	public static function getPhoto($photo_id) {
-		$error = ""; // для windows
+		$error = "";
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id, user_id, photo, description, created_at FROM photos WHERE id=:id";
@@ -253,22 +274,32 @@ class Photo extends Model
 		return true;
 	}
 
-	public function mergePhotos($photo, $mask) {
-		//imagecreatefromstring($photo);
-		$image = imagecreatefrompng(base64_encode($photo));
-		$pathToImage = "..\..\public\masks\\" . $mask . ".png";
-		$filter = imagecreatefrompng($pathToImage);
-		//imagealphablending($filter, false);
-		//imagesavealpha($filter, true);
-		//imagecopy($image, $filter, 43, 95, 0, 0, imagesx($filter), imagesy($filter));
-		//imagepng($image);
-		//var_dump($image);
-		//$result = "data:image/png;base64," . base64_encode($image);
-		//echo $result;
-		//imagedestroy($image);
-		//imagedestroy($filter);
-		//return $result;
-		return $image;
+	public static function mergePhotos($photo, $mask) {
+
+        $image = str_replace('data:image/png;base64,', '', $photo);
+        $filter = str_replace('data:image/png;base64,', '', $mask);
+
+        $image = base64_decode($image);
+        $filter = base64_decode($filter);
+
+		$image = imagecreatefromstring($image);
+		$filter = imagecreatefromstring($filter);
+
+		imagealphablending($filter, false);
+		imagesavealpha($filter, true);
+
+        $w_src = imagesx($image);
+        $h_src = imagesy($image);
+
+        imagecopyresampled($image, $filter, 0, 0, 0, 0,  $w_src, $h_src, $w_src, $h_src );
+        imagealphablending($image, false);
+        imagesavealpha($image, true);
+
+        $image_name = "tmp/tmp_" . $_SESSION["user_id"] . ".png";
+        imagepng($image, $image_name);
+        $data = file_get_contents($image_name);
+        unlink($image_name);
+        return "data:image/png;base64," . base64_encode($data);
 	}
 
 

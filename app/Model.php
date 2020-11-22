@@ -6,9 +6,17 @@ use PDOException;
 
 class Model
 {
-	const ADDRESS = "http://localhost:8000";
+	const ADDRESS = "http://localhost:8888";
 
-    protected static function getDB()
+    protected static function checkSession() {
+        if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] !== "" &&
+            isset($_SESSION["user"]) && $_SESSION["user"] !== "") {
+            return true;
+        }
+        return false;
+    }
+
+	protected static function getDB()
     {
     	try {
     		require('config/database.php');
@@ -40,5 +48,13 @@ class Model
 		var_dump($str);
 		echo '</pre>';
 	}
+
+    protected static function ErrorPage404()
+    {
+        $host = 'http://'.$_SERVER['HTTP_HOST'].'/';
+        header('HTTP/1.1 404 Not Found');
+        header("Status: 404 Not Found");
+        header('Location:'.$host.'404');
+    }
 
 }

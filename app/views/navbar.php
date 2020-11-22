@@ -16,26 +16,26 @@
 		<ul class="navbar-nav">
 			<?php if (isset($_SESSION['user']) && $_SESSION['user'] !== "") { ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="/photo">Camera</a>
+                    <a class="nav-link" href="/photo">Камера</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
+                    <a class="nav-link" href="/user/<?php echo $_SESSION['user'];?>">Моя страница</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/user/<?php echo $_SESSION['user'];?>">My page</a>
+                    <a class="nav-link" href="/settings">Настройки</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/settings">Settings</a>
+                    <a class="nav-link" href="/logout">Выйти</a>
                 </li>
 			<?php } else {?>
 			    <li class="nav-item">
-				    <a class="nav-link" href="/registration">Registration</a>
+				    <a class="nav-link" href="/registration">Регистрация</a>
 			    </li>
 			    <li class="nav-item">
-				    <a class="nav-link" href="/login">Login</a>
+				    <a class="nav-link" href="/login">Войти</a>
 			    </li>
                 <li class="nav-item">
-				    <a class="nav-link" href="/recovery">Reset password</a>
+				    <a class="nav-link" href="/recovery">Восстановить пароль</a>
 			    </li>
 			<?php } ?>
 
