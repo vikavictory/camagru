@@ -11,3 +11,7 @@ body {
     position: center;
     margin-left: 10%;
 }
+
+.menu {
+    display: none;
+}

@@ -114,6 +114,16 @@ class Comment extends Model
 	}
 
 	public static function checkDataForDeleteComment() {
+        if (!isset($_POST["comment_id"]) || $_POST["comment_id"] === "") {
+            return ["result" => false, "message" => "В запросе отсутствует id-комментария"];
+        }
+        $comment = Comment::getOneComment($_POST["comment_id"]);
+        if (!$comment) {
+            return ["result" => false, "message" => "Комментарий не найден"];
+        }
+        if ($comment['user_id'] !== $_SESSION["user_id"]) {
+            return ["result" => false, "message" => "Вы не являетесь владельцем комментария"];
+        }
 		return ["result" => true];
 	}
 

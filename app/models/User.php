@@ -158,7 +158,7 @@ class User extends Model
 		return $result;
 	}
 
-	private static function sendToken($user) //+
+	private static function sendToken($user)
 	{
 		$data = User::getUser($user);
 		$subject = "Camagru - Confirmation of registration";
@@ -168,7 +168,7 @@ class User extends Model
 		return $result;
 	}
 
-	public static function createUser() //+
+	public static function createUser()
 	{
 		$photo = null;
 		if (($validation = UserValidation::validateUserCreation()) !== true) {

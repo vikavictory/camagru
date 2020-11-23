@@ -3,7 +3,8 @@
 <body>
 <?php require_once "app/views/navbar.php" ?>
 <div class="container">
-    <h1 class="display-4"> Галерея </h1>
+    <center>
+        <h1 class="display-4"> Галерея </h1>
 <?php if (isset($result["error"])) {
 		echo $result["error"];
 	} else { ?>
@@ -12,7 +13,6 @@
         <div class="col-lg-9">
             <div id="carouselExampleIndicators" class="carousel slide my-4">
                 <div class="row">
-
                     <?php foreach ($result['photos'] as $value) { ?>
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="card w-200">
@@ -51,6 +51,8 @@
         ?>
     </ul>
 </nav>
+</center>
+
 <?php require_once "app/views/footer.php" ?>
 </body>
 </html>

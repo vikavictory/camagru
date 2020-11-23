@@ -10,7 +10,7 @@ class UserController extends Router
 {
 	private $DIR_PATH = 'app/views/user/';
 
-	public function registration() //+
+	public function registration()
 	{
         if (self::checkSession() === true) {
             header('Location: /user/' . $_SESSION['user']);

@@ -1,7 +1,4 @@
 function deleteComment(obj) {
-   // var string = document.getElementById()
-    //var comment_id = document.getElementById('comment_id');
-    //var user_id = document.getElementById('comment_user_id');
 
     var comment_id = obj.value;
 
