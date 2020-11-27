@@ -3,8 +3,6 @@
 namespace app\models;
 
 use app\Model;
-use app\models\Photo;
-use app\models\UserValidation;
 use Exception;
 use PDOException;
 
@@ -13,6 +11,8 @@ class User extends Model
 	public static function getUser($user)
 	{
 		$error = "";
+		$result = "";
+
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id, login, name, surname, email, token, activated, photo FROM users WHERE login=:login";
@@ -28,16 +28,20 @@ class User extends Model
 		if ($error) {
 			return false;
 		}
+
 		$userPhotos = Photo::getUserPhotos($result['id']);
 		if ($userPhotos) {
 			$result['photodata'] = $userPhotos;
 		}
+
 		return $result;
 	}
 
     public static function updateUserInfoDB($user)
     {
         $error = "";
+        $result = "";
+
         try {
             $link = self::getDB();
             $sql = "UPDATE users SET login=:login, name=:name, surname=:surname, email=:email WHERE id=:id";
@@ -53,6 +57,10 @@ class User extends Model
             $error = $e->getMessage();
         } catch( Exception $e) {
             $error = $e->getMessage();
+        }
+
+        if ($error) {
+            return false;
         }
         return $result;
     }
@@ -75,12 +83,13 @@ class User extends Model
 
 	    self::changeUserAvatar($photo);
 	    return "Фото успешно изменено";
-
     }
 
     public static function changeUserAvatar($photo)
     {
         $error = "";
+        $result = "";
+
         try {
             $link = self::getDB();
             $sql = "UPDATE users SET photo=:photo WHERE id=:id";
@@ -93,6 +102,10 @@ class User extends Model
             $error = $e->getMessage();
         } catch( Exception $e) {
             $error = $e->getMessage();
+        }
+
+        if ($error) {
+            return false;
         }
         return $result;
     }
@@ -120,6 +133,8 @@ class User extends Model
 
 	public static function getUserLogin($user_id) {
 		$error = "";
+		$result = "";
+
 		try {
 			$link = self::getDB();
 			$sql = "SELECT login FROM users WHERE id=:id";
@@ -132,6 +147,7 @@ class User extends Model
 		} catch( Exception $e) {
 			$error = $e->getMessage();
 		}
+
 		if ($error) {
 			return false;
 		}
@@ -140,6 +156,8 @@ class User extends Model
 
 	public static function getRecipientInformation($user_id) {
 		$error = "";
+		$result = "";
+
 		try {
 			$link = self::getDB();
 			$sql = "SELECT email, notification FROM users WHERE id=:id";
@@ -152,6 +170,7 @@ class User extends Model
 		} catch( Exception $e) {
 			$error = $e->getMessage();
 		}
+
 		if ($error) {
 			return false;
 		}
@@ -164,16 +183,17 @@ class User extends Model
 		$subject = "Camagru - Confirmation of registration";
 		$message = "Для подтверждения регистрации пройдите по ссылке: " .
 			self::ADDRESS . "/token?id=" . $data['id'] . "&token=" . $data['token'];
-		$result = self::sendMail($data['email'], $subject, $message);
-		return $result;
+        return self::sendMail($data['email'], $subject, $message);
 	}
 
 	public static function createUser()
 	{
 		$photo = null;
+
 		if (($validation = UserValidation::validateUserCreation()) !== true) {
 			return $validation;
 		}
+
 		if ($_FILES['image']['name']) {
 			$result = Photo::getBase64();
 			if (isset($result['error'])) {
@@ -183,10 +203,12 @@ class User extends Model
 				$photo = $result['photo'];
 			}
 		}
+
 		$token = md5($_POST['email'] . "918273645");
 		$password = hash('whirlpool', $_POST['password']);
 		$created_at = date("Y-m-d H:i:s");
 		$activated = 0;
+
 		try {
 			$link = self::getDB();
 			$sql = "INSERT INTO users (login, name, surname, password, email, token, photo, created_at, activated)
@@ -207,6 +229,7 @@ class User extends Model
 		} catch( Exception $e) {
 			return $e->getMessage();
 		}
+
 		$result = self::sendToken($_POST['login']);
 		if ($result) {
 			return true;
@@ -220,6 +243,7 @@ class User extends Model
 		if (($validation = UserValidation::validateAuth()) !== true) {
 			return $validation;
 		}
+
 		try {
 			$link = self::getDB();
 			$sql = "SELECT password, activated, id FROM users WHERE login=:login";
@@ -234,6 +258,7 @@ class User extends Model
 		} if (!$result) {
 			return "Пользователя не существует";
 		}
+
 		if (hash('whirlpool', $_POST['password']) === $result['password']) {
 			if ($result['activated'] === '1') {
 				$_SESSION['user'] = $_POST['login'];
@@ -263,12 +288,15 @@ class User extends Model
 		} catch( Exception $e) {
 			return $e->getMessage();
 		}
+
 		if (!($result) || $result['token'] !== $token) {
 			return "Cсылка не активна";
 		}
+
 		if ($result['activated'] === '1') {
 			return "Аккаунт уже активирован";
 		}
+
 		try {
 			$sql = "UPDATE users SET activated = '1' WHERE id=:id";
 			$sth = $link->prepare($sql);
@@ -287,6 +315,7 @@ class User extends Model
 		if (($validation = UserValidation::checkEmailIsSet()) !== true) {
 			return $validation;
 		}
+
 		if (($result_id = UserValidation::checkEmailExist($_POST['email'])) === false) {
 			return "Пользователь не найден";
 		}
@@ -373,12 +402,12 @@ class User extends Model
 		} catch( Exception $e) {
 			return $e->getMessage();
 		}
+
 		if ($new_password === $result['password']) {
 			return ["result" => false, "message" => "Пароль совпадает с текущим"];
 		} else {
 			return ["result" => true];
 		}
-
 	}
 
 	public static function updatePassword($user_id, $password)
@@ -395,6 +424,7 @@ class User extends Model
 		} catch( Exception $e) {
 			return $e->getMessage();
 		}
+
 		return true;
 	}
 
@@ -429,6 +459,7 @@ class User extends Model
         } catch( Exception $e) {
             return $e->getMessage();
         }
+
         return ["result" => true, "message" => "Запись удалена"];
     }
 }

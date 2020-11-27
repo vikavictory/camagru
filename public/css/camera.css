@@ -7,11 +7,7 @@ video {
     -webkit-transform: scaleX(-1);
 }
 
-#videoBlock {
-    display: inline-block;
-}
-
-#previewBlock {
+#videoBlock, #previewBlock {
     display: inline-block;
 }
 
@@ -28,7 +24,7 @@ video {
 }
 
 #comment {
-    width: 100%;
+    width: 80%;
 }
 
 #canvas {
@@ -42,9 +38,9 @@ video {
 .mask {
     display: inline-block;
     margin: 0 auto;
-    width: 45%;
+    width: 100%;
     height: 40%;
-    overflow-x: scroll;
+    overflow-x: visible;
     overflow-y: hidden;
     white-space: nowrap;
     word-wrap: normal;
@@ -53,9 +49,9 @@ video {
 .randomPhotos {
     display: inline-block;
     margin: 0 auto;
-    height: 40%;
-    width: 49%;
-    overflow-x: scroll;
+    height: 20%;
+    width: 100%;
+    overflow-x: visible;
     overflow-y: hidden;
     white-space: nowrap;
     word-wrap: normal;
@@ -63,4 +59,8 @@ video {
 
 .randomPhoto {
     height: 100%;
+}
+
+.jumbotron {
+    padding-right: 5%;
 }

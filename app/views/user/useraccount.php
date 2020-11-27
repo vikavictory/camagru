@@ -11,15 +11,15 @@
                     <img src="<?php echo htmlspecialchars($user['photo']);?>" alt="Фото пользователя" width=150px>
 				<?php } ?>
                 <div id="users-info">
-                    <p> <?php echo htmlspecialchars($user['name']);?> <?php echo htmlspecialchars($user['surname']);?></p>
+                    <br><p> <?php echo htmlspecialchars($user['name']);?> <?php echo htmlspecialchars($user['surname']);?></p>
                     <p> Email: <?php echo htmlspecialchars($user['email']);?>.</p>
                 </div>
             </div>
         </div>
 			<?php if (isset($user['photodata'])) { ?>
 					<?php if (isset($user['photodata']['photos'])) { ?>
-                <div class="container" id="row-container">
-                    <div class="row">
+                <center>
+                    <div class="row2">
                         <div class="col-lg-9">
                             <div id="carouselExampleIndicators" class="carousel slide my-4">
                                 <div class="row">
@@ -28,12 +28,13 @@
                                             <div class="card w-200">
                                                 <a href="\photo\<?php echo $value['id'];?>"><img class="card-img-top" src="<?php echo htmlspecialchars($value['photo']);?>" alt="" ></a>
                                             </div>
-                                        </div> <?php } ?>
+                                        </div>
+                                    <?php } ?>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </center>
 						<?php }
 					} ?>
         <nav aria-label="Page navigation example">

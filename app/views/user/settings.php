@@ -13,8 +13,7 @@
 	            $message = "";
             } ?>
             <button id="notificationButton" class="btn btn-outline-secondary"></button>
-            <br>
-            <br>
+            <br><br>
             <form name="newpassword" method="post" action="" >
                 Новый пароль:<br>
                 <svg class="bi bi-lock" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

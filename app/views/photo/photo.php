@@ -6,10 +6,10 @@
     <div class="jumbotron">
         <link rel="stylesheet" type="text/css" href="/public/css/camera.css">
         <div id="videoBlock">
-            <video id="video" width="448px" height="336px" autoplay="autoplay" ></video>
-            <img id="image" height="336px" width="448px" style="display: none;"/>
+            <video id="video" autoplay="autoplay" ></video>
+            <img id="image" style="display: none;"/>
             <div id="canvasVideo"></div>
-            <canvas id="help" width="448px" height="336px"></canvas>
+            <canvas id="help"></canvas>
             <br><br><br><br>
             <input id="button" type="button" value="Сделать снимок" />
             <input id="increaseButton" type="button" value=" + " />
@@ -17,9 +17,9 @@
             <input type='file' accept="image/*" onchange="uploadPic(this);" />
         </div>
         <div id="previewBlock">
-            <canvas id="canvas" width="448px" height="336px"></canvas>
-            <canvas id="canvasMasks" width="448px" height="336px"></canvas>
-            <canvas id="help" width="448px" height="336px"></canvas>
+            <canvas id="canvas"></canvas>
+            <canvas id="canvasMasks"></canvas>
+            <canvas id="help2" ></canvas>
             <br><br>
             <form name="description">
                 <textarea id="comment" cols="40" rows="1.75" placeholder="Введите подпись..." ></textarea><br>

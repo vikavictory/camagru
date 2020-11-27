@@ -5,12 +5,10 @@
 		<!--  <img src="public/img/brand.png" width="100" height="100" class="d-inline-block align-top" alt="">-->
 		Camagru
 	</a>
-
 	<!-- Navbar toggler -->
-	<button class="navbar-toggler" type="button" data-toggle="dropdown" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" id="menuButton">
+	<button class="navbar-toggler" type="button" data-toggle="dropdown" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" id="menuButton" onclick="showMenu();">
 		<span class="navbar-toggler-icon"></span>
 	</button>
-
 	<!-- Collapsable area -->
 	<div class="collapse navbar-collapse" id="menu">
 		<ul class="navbar-nav">
@@ -38,7 +36,7 @@
 				    <a class="nav-link" href="/recovery">Восстановить пароль</a>
 			    </li>
 			<?php } ?>
-
 		</ul>
 	</div>
 </nav>
+<script src="/public/js/menu.js"></script>

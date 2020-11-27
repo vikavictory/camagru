@@ -4,7 +4,6 @@
 <?php require_once "app/views/navbar.php" ?>
 <div class="container">
 <h1 class="display-4">Вход</h1>
-
 <?php
 if ($message !== "") {
 	echo "<p>" . htmlspecialchars($message) . "</p>";

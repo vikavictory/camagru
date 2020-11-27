@@ -1,9 +1,8 @@
-
-function validate_form ( )
+function validate_form ()
 {
-    var loginReg = RegExp("^[a-z][a-z0-9]{1,20}$")
-    var nameReg = RegExp("^[A-Z][a-z]{1,30}$")
-    var passwordReg = RegExp("(?=.*[0-9])(?=.*[a-zA-Z])")
+    let loginReg = RegExp("^[a-z][a-z0-9]{1,20}$")
+    let nameReg = RegExp("^[A-Z][a-z]{1,30}$")
+    let passwordReg = RegExp("(?=.*[0-9])(?=.*[a-zA-Z])")
 
     if (document.registration.login.value.length > 15)
     {

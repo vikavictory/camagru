@@ -3,14 +3,14 @@
 namespace app\models;
 
 use app\Model;
-use app\models\User;
-use app\models\Photo;
 use Exception;
 use PDOException;
 
 class Comment extends Model
 {
 	public static function createComment() {
+        $result = "";
+
 		try {
 			$created_at = date("Y-m-d H:i:s");
 			$photo_id = $_POST['photo_id'];
@@ -31,11 +31,14 @@ class Comment extends Model
 		} catch( Exception $e) {
 			return $e->getMessage();
 		}
+
 		return ["result" => true, "comment_id" => $result];
 	}
 
 	public static function getComments($photo_id) {
 		$error = "";
+		$result = "";
+
 		try {
 			$link = self::getDB();
 			$sql = "SELECT comments.id, photo_id, user_id, comment_text, comments.created_at, users.login FROM comments 
@@ -54,11 +57,14 @@ class Comment extends Model
 		if ($error) {
 			return false;
 		}
+
 		return $result;
 	}
 
 	public static function getOneComment($comment_id) {
 		$error = "";
+        $result = "";
+
 		try {
 			$link = self::getDB();
 			$sql = "SELECT * FROM comments 
@@ -79,6 +85,7 @@ class Comment extends Model
 	}
 
 	public static function checkDataForNewComment() {
+
 		if (!isset($_SESSION["user"]) && !isset($_SESSION["user_id"])) {
 			return ["result" => false, "message" => "Пользователь не авторизирован"];
 		}
@@ -100,6 +107,7 @@ class Comment extends Model
 		if (!(User::getUserLogin($_POST["user_id"]))) {
 			return ["result" => false, "message" => "Пользователь не найден"];
 		}
+
 		return ["result" => true];
 	}
 
@@ -180,9 +188,8 @@ class Comment extends Model
 			if (self::sendMail($recipientData['email'], $subject, $message) === false) {
 				return "Произошла ошибка при отправке письма";
 			}
-			return true;
 		}
-
+		return true;
 	}
 
 }

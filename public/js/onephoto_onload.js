@@ -1,16 +1,15 @@
 window.onload = function () {
-    var button = document.getElementById('commentButton');
-    var xmlhttp = new XMLHttpRequest();
-    var data;
+    let button = document.getElementById('commentButton');
+    let xmlhttp = new XMLHttpRequest();
+    let data;
 
-    var newComment = function (event) {
+    let newComment = function (event) {
         event.preventDefault();
-        console.log('event:', event);
-        var comment = document.getElementById('comment').value;
-        var user_id = document.getElementById('user_id').value;
-        var photo_id = document.getElementById('photo_id').value;
+        let comment = document.getElementById('comment').value;
+        let user_id = document.getElementById('user_id').value;
+        let photo_id = document.getElementById('photo_id').value;
 
-        if(comment === '') {
+        if (comment === '') {
             alert('Введите комментарий');
             return false;
         }
@@ -19,41 +18,23 @@ window.onload = function () {
         data = "user_id=" + encodeURIComponent(user_id) +
             "&photo_id=" + encodeURIComponent(photo_id) +
             "&comment=" + encodeURIComponent(comment);
-        console.log('data newcomment',data);
         xmlhttp.send(data);
-        xmlhttp.onload = () => {
-            if (xmlhttp.status != 200) {
-                console.log("аааашибка!");
-            } else {
-                console.log(xmlhttp.response);
-            }
-        }
         document.newcomment.reset();
         getComments();
     }
     button.addEventListener('click', newComment);
 
-    var button2 = document.getElementById('likeButton');
-    var changeLike = function (event) {
+    let changeLike = function (event) {
         event.preventDefault();
-        var user_id = document.getElementById('user_id').value;
-        var photo_id = document.getElementById('photo_id').value;
+        let user_id = document.getElementById('user_id').value;
+        let photo_id = document.getElementById('photo_id').value;
         xmlhttp.open('POST', '/changelike', true);
         xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         data = "user_id=" + encodeURIComponent(user_id) +
             "&photo_id=" + encodeURIComponent(photo_id);
         xmlhttp.send(data);
-        xmlhttp.onload = () => {
-            if (xmlhttp.status != 200) {
-                console.log("ошибка!");
-            } else {
-                console.log(xmlhttp.response);
-            }
-        }
-        console.log("here");
         getLikes();
     }
-
+    let button2 = document.getElementById('likeButton');
     button2.addEventListener('click', changeLike);
-    console.log(document.cookie);
 };

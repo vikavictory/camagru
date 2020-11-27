@@ -3,7 +3,7 @@
 <body>
 <?php require_once "app/views/navbar.php" ?>
 <div class="container">
-<h1 class="display-4">Регистрация</h1>
+    <h1 class="display-4">Регистрация</h1>
 <?php
 if ($message !== "") {
 	echo "<p>" . htmlspecialchars($message) . "</p>";
@@ -13,7 +13,7 @@ if ($message !== "") {
     <div class="container">
         <div class="jumbotron">
             <div class="registration-form">
-                <form name="registration" method="post" action="" enctype="multipart/form-data">
+                <form name="registration" method="post" action="" enctype="multipart/form-data" onsubmit="validate_form()">
                     Логин:<br>
                     <svg class="bi bi-person-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
@@ -52,10 +52,8 @@ if ($message !== "") {
                 </form>
             </div>
         </div>
+    </div>
 </div>
-</div>
-
 </body>
 <?php require_once "app/views/footer.php" ?>
-
 </html>

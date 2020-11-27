@@ -7,4 +7,5 @@
     <link href="/public/css/footer.css" rel="stylesheet">
     <link href="/public/css/onephoto.css" rel="stylesheet">
     <script src="/public/js/register.js"></script>
+    <meta name = "viewport" content = "width=device-width, initial-scale = 1">
 </head>

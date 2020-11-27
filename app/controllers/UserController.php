@@ -154,6 +154,8 @@ class UserController extends Router
                 $message = User::updateUserAvatar();
             }
             require_once $pathView;
+        } else {
+            header('Location: /');
         }
 	}
 

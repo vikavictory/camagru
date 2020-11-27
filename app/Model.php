@@ -11,9 +11,15 @@ class Model
     protected static function checkSession() {
         if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] !== "" &&
             isset($_SESSION["user"]) && $_SESSION["user"] !== "") {
+            self::setCookie();
             return true;
         }
         return false;
+    }
+
+    protected static function setCookie() {
+        setcookie('user', $_SESSION["user"]);
+        setcookie('user_id', $_SESSION["user_id"]);
     }
 
 	protected static function getDB()
@@ -42,19 +48,19 @@ class Model
 		return $result;
 	}
 
-	protected static function debug($str)
-	{
-		echo '<pre>';
-		var_dump($str);
-		echo '</pre>';
-	}
-
     protected static function ErrorPage404()
     {
-        $host = 'http://'.$_SERVER['HTTP_HOST'].'/';
+        $host = 'http://' . $_SERVER['HTTP_HOST'] . '/';
         header('HTTP/1.1 404 Not Found');
         header("Status: 404 Not Found");
-        header('Location:'.$host.'404');
+        header('Location:' . $host . '404');
+    }
+
+    protected static function debug($str)
+    {
+        echo '<pre>';
+        var_dump($str);
+        echo '</pre>';
     }
 
 }

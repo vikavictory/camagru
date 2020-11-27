@@ -1,10 +1,5 @@
 html {
     position: relative;
-    min-height: 100%;
-}
-
-body {
-    margin-bottom: 60px;
 }
 
 .pagination {
@@ -14,4 +9,13 @@ body {
 
 .menu {
     display: none;
+}
+
+.row {
+    position: center;
+}
+
+.line {
+    position: relative;
+    height: 10%;
 }

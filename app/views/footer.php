@@ -1,4 +1,4 @@
-<script src="/public/js/menu.js"></script>
+<div class="line"></div>
 <footer class="footer">
     <div class="container">
         <span class="text-muted">@hdeckard</span>

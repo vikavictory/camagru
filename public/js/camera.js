@@ -1,30 +1,47 @@
-var mode = 1;
-var base64dataUrl ;
-var base64dataUrl_2;
-var dX = 80;
-var dY = 80;
-var size = 200;
+let mode = 1;
+let base64dataUrl ;
+let base64dataUrl_2;
+let dX = 80;
+let dY = 80;
+let size = 200;
 let zIndex = 0;
-var current;
+let current;
+let width = getWidth();
+let height = getHeight();
 const getCanvasVideo = () => document.getElementById("canvasVideo");
 
 window.onload = function () {
 
-    var button = document.getElementById('button');
-    var saveButton = document.getElementById('saveButton');
-    var increaseButton = document.getElementById('increaseButton');
-    var decreaseButton = document.getElementById('decreaseButton');
-    var cleanButton = document.getElementById('cleanButton');
+    let button = document.getElementById('button');
+    let saveButton = document.getElementById('saveButton');
+    let increaseButton = document.getElementById('increaseButton');
+    let decreaseButton = document.getElementById('decreaseButton');
+    let cleanButton = document.getElementById('cleanButton');
 
-    var canvas = document.getElementById('canvas');
-    var canvasMasks = document.getElementById('canvasMasks');
-    var video = document.getElementById('video');
-    var context = canvas.getContext('2d');
-    var contextMasks = canvasMasks.getContext('2d');
-    var image = document.getElementById('image');
-    var masksImage = document.getElementById('masksImage');
+    let canvas = document.getElementById('canvas');
+    let canvasMasks = document.getElementById('canvasMasks');
+    let video = document.getElementById('video');
+    let image = document.getElementById('image');
+    let help = document.getElementById('help');
+    let help2 = document.getElementById('help2');
 
-    var captureMe = function () {
+    video.width = width;
+    video.height = height;
+    canvas.width = width;
+    canvas.height = height;
+    image.width = width;
+    image.height = height;
+    help.width = width;
+    help.height = height;
+    help2.width = width;
+    help2.height = height;
+    canvasMasks.width = width;
+    canvasMasks.height = height;
+
+    let context = canvas.getContext('2d');
+    let contextMasks = canvasMasks.getContext('2d');
+
+    let captureMe = function () {
         if (mode === 1) {
             context.translate(canvas.width, 0);
             context.scale(-1, 1);
@@ -36,6 +53,7 @@ window.onload = function () {
         }
 
         const canvasVideo = getCanvasVideo();
+        contextMasks.clearRect(0, 0, canvas.width, canvas.height);
 
         for (let i = 0; i < canvasVideo.children.length; i++) {
             const currentCanvas = canvasVideo.children[i];
@@ -45,16 +63,14 @@ window.onload = function () {
 
         base64dataUrl = canvas.toDataURL('image/png');
         base64dataUrl_2 = canvasMasks.toDataURL('image/png');
-        console.log(mode);
     }
 
-    var saveMe = function () {
-        var xhr = new XMLHttpRequest();
-        var comment = document.getElementById('comment').value;
-        var data = "description=" + comment +
+    let saveMe = function () {
+        let xhr = new XMLHttpRequest();
+        let comment = document.getElementById('comment').value;
+        let data = "description=" + comment +
             "&photo=" + encodeURIComponent(base64dataUrl) +
             "&masks=" + encodeURIComponent(base64dataUrl_2);
-        console.log(data);
         xhr.open('POST', '/save', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.send(data);
@@ -96,8 +112,8 @@ function showMasks() {
 
         let maskElement = document.getElementById(current);
         let canvas = document.createElement('canvas');
-        canvas.width = 448;
-        canvas.height = 336;
+        canvas.width = width;
+        canvas.height = height;
         canvas.draggable = true;
         canvas.id = imgId;
         canvas.style.zIndex = zIndex;
@@ -145,16 +161,16 @@ function uploadPic(input) {
         let reader = new FileReader();
         let image = document.getElementById('image');
         reader.onload = function(e) {
-            var file_type = input.files[0].type;
-            if (file_type!='image/jpeg' && file_type!='image/png') {
+            let file_type = input.files[0].type;
+            if (file_type !== 'image/jpeg' && file_type !== 'image/png') {
                 alert('только jpg и png');
                 return ;
             }
 
             image.style.display = "";
             image.setAttribute('src', e.target.result);
-            image.height = 336;
-            image.width = 448;
+            image.height = height;
+            image.width = width;
             document.getElementById('video').style.display = "none";
         };
         reader.readAsDataURL(input.files[0]);
@@ -167,13 +183,13 @@ function clean () {
     image.style.display = "none";
     image.removeAttribute('src');
 
-    var canvas = document.getElementById('canvas');
-    var context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
+    let canvas = document.getElementById('canvas');
+    let context = canvas.getContext('2d');
+    context.clearRect(0, 0, width, height);
 
-    var canvasMasks = document.getElementById('canvasMasks');
-    var contextMasks = canvasMasks.getContext('2d');
-    contextMasks.clearRect(0, 0, canvas.width, canvas.height);
+    let canvasMasks = document.getElementById('canvasMasks');
+    let contextMasks = canvasMasks.getContext('2d');
+    contextMasks.clearRect(0, 0, width, height);
 
     document.getElementById('comment').value = "";
 
@@ -182,8 +198,27 @@ function clean () {
         document.getElementById(name).checked = false;
     }
 
+    base64dataUrl = "";
+    base64dataUrl_2 = "";
+
     getCanvasVideo().innerHTML = "";
 
     document.getElementById('video').style.display = "";
     mode = 1;
+}
+
+function getWidth() {
+    if (window.screen.width > 1100) {
+        return (448);
+    } else {
+        return (window.screen.width * 0.70);
+    }
+}
+
+function getHeight() {
+    if (window.screen.width > 1100) {
+        return (336);
+    } else {
+        return (336 * getWidth() / 448);
+    }
 }

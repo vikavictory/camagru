@@ -7,7 +7,7 @@
         <div class="jumbotron">
     <script src="/public/js/getlikes.js"></script>
     <input type="hidden" id="photo_id" value="<?php echo $photo['id'];?>"/>
-    <img src="<?php echo htmlspecialchars($photo['photo']);?>" alt="Фото пользователя" width=500px>
+    <img id="one_photo" src="<?php echo htmlspecialchars($photo['photo']);?>" alt="Фото">
     <br>
     <div class="likes">
         <button id="likeButton" class="btn btn-light">
@@ -42,10 +42,10 @@
             <textarea id="comment" cols="150" rows="5" placeholder="Комментировать..." ></textarea><br>
             <button id="commentButton" class="btn btn-outline-secondary">Отправить</button>
         </form>
-        <script src="/public/js/onephoto_onload.js"></script>
-    <script src="/public/js/delete_comment.js"></script>
     <?php } } ?>
     </div>
+<script src="/public/js/onephoto_onload.js"></script>
+<script src="/public/js/delete_comment.js"></script>
 <?php require_once "app/views/footer.php" ?>
 </body>
 </html>

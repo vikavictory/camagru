@@ -66,5 +66,4 @@ class PhotoController extends Model
             }
         }
     }
-
 }

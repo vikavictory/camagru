@@ -37,8 +37,7 @@ class CommentController extends Model
 
     public function deletecomment() {
         if (self::checkSession() === true) {
-            $check = Comment::checkDataForDeleteComment(); // передать id комментария и id автора комментария, проверить что совпадают
-            var_dump($_POST);
+            $check = Comment::checkDataForDeleteComment();
             $comment_id = $_POST['comment_id'];
             if ($check["result"] === false) {
                 echo json_encode($check);
@@ -48,5 +47,4 @@ class CommentController extends Model
             }
         }
     }
-
 }

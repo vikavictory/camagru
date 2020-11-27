@@ -2,14 +2,13 @@
 <?php require_once "app/views/header.php" ?>
 <body>
 <?php require_once "app/views/navbar.php" ?>
-<div class="container">
-    <center>
+<center>
+    <div class="container">
         <h1 class="display-4"> Галерея </h1>
 <?php if (isset($result["error"])) {
 		echo $result["error"];
 	} else { ?>
-
-    <div class="row">
+    <div class="row2">
         <div class="col-lg-9">
             <div id="carouselExampleIndicators" class="carousel slide my-4">
                 <div class="row">
@@ -26,7 +25,7 @@
             </div>
         </div>
     </div>
-</div> <?php } ?>
+ <?php } ?>
 
 <nav aria-label="Page navigation example">
     <ul class="pagination">
@@ -51,6 +50,7 @@
         ?>
     </ul>
 </nav>
+</div>
 </center>
 
 <?php require_once "app/views/footer.php" ?>

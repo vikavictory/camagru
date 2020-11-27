@@ -1,16 +1,17 @@
-function showNotification() {
-    var xmlhttp = new XMLHttpRequest();
-    var button = document.getElementById('notificationButton');
-    var data;
+function showNotification()
+{
+    let xmlhttp = new XMLHttpRequest();
+    let button = document.getElementById('notificationButton');
+    let data;
 
     xmlhttp.open('post', '/checknotification', true);
     xmlhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xmlhttp.send();
     xmlhttp.onreadystatechange = function() {
-        if(xmlhttp.readyState == 4) {
-            if(xmlhttp.status == 200) {
+        if (xmlhttp.readyState === 4) {
+            if (xmlhttp.status === 200) {
                 data = xmlhttp.responseText;
-                if(data) {
+                if (data) {
                     data = JSON.parse(data);
                     if (data.result === true) {
                         button.innerText = "Отключить уведомления";

@@ -1,8 +1,10 @@
 <?php
 
-
 namespace app\models;
+
 use app\Model;
+use Exception;
+use PDOException;
 
 class Like extends Model
 {
@@ -54,6 +56,8 @@ class Like extends Model
 
 	public static function getLikesCount($photo_id) {
 		$error = "";
+        $result = "";
+
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id FROM likes
@@ -74,7 +78,9 @@ class Like extends Model
 	}
 
 	public static function deleteLike($photo_id, $user_id) {
-		try {
+		$error = "";
+
+	    try {
 			$link = self::getDB();
 			$sql = "DELETE FROM likes
 			WHERE user_id=:user_id AND photo_id=:photo_id";
@@ -95,6 +101,7 @@ class Like extends Model
 
 	public static function deleteAllLikesPhoto($photo_id) {
 		$error = "";
+
 	    try {
 			$link = self::getDB();
 			$sql = "DELETE FROM likes

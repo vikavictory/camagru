@@ -43,5 +43,4 @@ class LikeController extends Model
             }
         }
     }
-
 }

@@ -98,6 +98,7 @@ class Photo extends Model
 		$photoCount = self::getPhotoCount();
 		$data = self::getStartingPhotoNumber($photoCount);
 		$error = "";
+		$result = "";
 		if (isset($data["error"])) {
 			return ["error" => $data["error"]];
 		}
@@ -124,6 +125,8 @@ class Photo extends Model
 	}
 
 	public static function getRandomPhotos() {
+	    $result = "";
+
         try {
             $link = self::getDB();
             $sql = "SELECT photos.id, photos.photo, users.login FROM photos
@@ -174,6 +177,8 @@ class Photo extends Model
 
 	public static function getPhotoOwner($photo_id) {
 		$error = "";
+		$result = "";
+
 		try {
 			$link = self::getDB();
 			$sql = "SELECT user_id FROM photos WHERE id=:id";
@@ -195,6 +200,8 @@ class Photo extends Model
 
 	public static function getPhoto($photo_id) {
 		$error = "";
+		$result = "";
+
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id, user_id, photo, description, created_at FROM photos WHERE id=:id";
@@ -215,6 +222,8 @@ class Photo extends Model
 
 	public static function getPhotoCount() {
 		$error = "";
+		$result = "";
+
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id FROM photos";
@@ -234,6 +243,7 @@ class Photo extends Model
 
 	public static function getUserPhotoCount($user_id) {
 		$error = "";
+		$result = "";
 		try {
 			$link = self::getDB();
 			$sql = "SELECT id FROM photos WHERE user_id=:user_id";
@@ -301,6 +311,5 @@ class Photo extends Model
         unlink($image_name);
         return "data:image/png;base64," . base64_encode($data);
 	}
-
 
 }

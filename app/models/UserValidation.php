@@ -117,6 +117,9 @@ class UserValidation extends Model
 		if (($message = self::checkEmailIsSet()) !== true) {
 			return $message;
 		}
+        if (strlen($_POST['email']) > 50) {
+            return "E-mail должен включать в себя не больше 50 символов";
+        }
 		if (!(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))) {
 			return "E-mail адрес указан неверно";
 		}
@@ -131,6 +134,9 @@ class UserValidation extends Model
 		if (($message = self::checkNameIsSet()) !== true) {
 			return $message;
 		}
+        if (strlen($_POST['name']) > 30) {
+            return "Имя должно включать в себя не больше 30 символов";
+        }
 		if (!(preg_match("/^[A-Z]/", $_POST['name']))) {
 			return "Имя должно начинаться с большой буквы.";
 		}
@@ -140,6 +146,9 @@ class UserValidation extends Model
 		if (($message = self::checkSurnameIsSet()) !== true) {
 			return $message;
 		}
+        if (strlen($_POST['surname']) > 30) {
+            return "Фамилия должна включать в себя не больше 30 символов";
+        }
 		if (!(preg_match("/^[A-Z]/", $_POST['name']))) {
 			return "Фамилия должна начинаться с большой буквы.";
 		}

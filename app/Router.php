@@ -13,7 +13,6 @@ Class Router extends Model
 		'settings', 'user', 'token', 'recovery', 'changepassword', 'changenotification', 'checknotification'];
 	private array $PHOTO_ACTIONS = ['', 'photo', 'save'];
     private array $COMMENT_ACTIONS = ['newcomment', 'getcomments', 'deletecomment'];
-
     private array $LIKE_ACTIONS = ['getlikes', 'changelike'];
 
 	protected function getUri()
@@ -55,7 +54,6 @@ Class Router extends Model
 
 		if ($controller_name && count($routes) <= 2)
 		{
-			//проверка на количество routes 1-2
 			if ($controller_name === "PhotoController")
 			{
 				$controller = new PhotoController;
